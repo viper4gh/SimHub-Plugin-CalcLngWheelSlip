@@ -1,10 +1,11 @@
-﻿<UserControl x:Class="Viper.PluginCalcRotWheelSlip.SettingsControl"
+﻿<UserControl
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Viper.PluginCalcRotWheelSlip"
-        xmlns:styles="clr-namespace:SimHub.Plugins.Styles;assembly=SimHub.Plugins" mc:Ignorable="d" 
+        xmlns:styles="clr-namespace:SimHub.Plugins.Styles;assembly=SimHub.Plugins" xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls" x:Class="Viper.PluginCalcRotWheelSlip.SettingsControl"
+             mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -26,10 +27,11 @@
         </Grid.RowDefinitions>
         <styles:SHSection Title="Plugin Options" Grid.RowSpan="2">
             <StackPanel Margin="0,0,-10,-15">
-                <styles:SHButtonPrimary HorizontalAlignment="Left">Test button</styles:SHButtonPrimary>
-                <styles:SHButtonSecondary HorizontalAlignment="Left">Secondary button</styles:SHButtonSecondary>
-                <styles:SHLinkButton HorizontalAlignment="Left">Link button</styles:SHLinkButton>
-                <styles:SHLinkButtonSmall HorizontalAlignment="Left">Link button small</styles:SHLinkButtonSmall>
+                <styles:SHButtonPrimary HorizontalAlignment="Left" Content="Test button"/>
+                <styles:SHButtonSecondary HorizontalAlignment="Left" Content="Secondary button"/>
+                <styles:SHLinkButton HorizontalAlignment="Left" Content="Link button"/>
+                <styles:SHLinkButtonSmall HorizontalAlignment="Left" Content="Link button small"/>
+                <Custom:NumericUpDown x:Name="TestField"/>
 
             </StackPanel>
         </styles:SHSection>

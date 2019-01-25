@@ -18,11 +18,18 @@ namespace Viper.PluginCalcRotWheelSlip
     /// <summary>
     /// Logique d'interaction pour SettingsControlDemo.xaml
     /// </summary>
+
     public partial class SettingsControl : UserControl
     {
         public SettingsControl()
         {
             InitializeComponent();
+            TestField.Value = 5;
+        }
+
+        public double GetValue()
+        {
+            return (double)TestField.Value;
         }
     }
 }

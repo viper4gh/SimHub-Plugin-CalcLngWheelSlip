@@ -17,6 +17,7 @@ namespace Viper.PluginCalcRotWheelSlip
         private object TyreDiameterFront;
         private bool TyreDiameterCalculated = false;
         private bool manualOverride = false;
+        private bool reset = false;
 
         //input variables
         private string curGame;
@@ -26,8 +27,8 @@ namespace Viper.PluginCalcRotWheelSlip
         private float[] TyreRPS = new float[] { 0f, 0f, 0f, 0f };
 
         //output variables
-        private float[] TyreDiameter;   // in meter - FL,FR,RL,RR
-        private float[] RotTyreSlip; // Rotational Tyre Slip values FL,FR,RL,RR
+        private float[] TyreDiameter = new float[] { 0f, 0f, 0f, 0f };   // in meter - FL,FR,RL,RR
+        private float[] RotTyreSlip = new float[] { 0f, 0f, 0f, 0f }; // Rotational Tyre Slip values FL,FR,RL,RR
 
         /// <summary>
         /// Instance of the current plugin manager
@@ -90,13 +91,19 @@ namespace Viper.PluginCalcRotWheelSlip
                     //////////////////////////////////////////////
 
                     // reset Tyre Diameter Calculation after car switch
-                    if (data.OldData.CarModel != data.NewData.CarModel)
+                    if (data.OldData.CarModel != data.NewData.CarModel || reset == true)
                     {
                         TyreDiameterCalculated = false;
+                        reset = false;
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.TyreDiameterComputed", this.GetType(), false);
                         pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_FL", this.GetType(), "[NULL]");
                         pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_FR", this.GetType(), "[NULL]");
                         pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_RL", this.GetType(), "[NULL]");
                         pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_RR", this.GetType(), "[NULL]");
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_FL", this.GetType(), 0);
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_FR", this.GetType(), 0);
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RL", this.GetType(), 0);
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RR", this.GetType(), 0);
                     }
 
                     // calculate Tyre Diameter automatic (Speed > 20 km/h, Brake and Throttle = 0) or on manual Override  // TODO: pcars2 mLocalVelocity01/mSpeed , R3R LocalVelocity.X/CarSpeed  between -0.01 and 0.01
@@ -117,10 +124,15 @@ namespace Viper.PluginCalcRotWheelSlip
                         */
                         for (int i = 0; i < TyreRPS.Length; i++)
                         {
+                            if(TyreRPS[i] != 0)
+                            {
+                                TyreDiameter[i] = Speedms / TyreRPS[i] * 2;
+                            }
                         }
-                        
-
-
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_FL", this.GetType(), TyreDiameter[0]);
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_FR", this.GetType(), TyreDiameter[1]);
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_RL", this.GetType(), TyreDiameter[2]);
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_RR", this.GetType(), TyreDiameter[3]);
 
                         TyreDiameterCalculated = true;
                         manualOverride = false;
@@ -130,7 +142,34 @@ namespace Viper.PluginCalcRotWheelSlip
                     // calculate Tyre Lock / Spin
                     if (TyreDiameterCalculated == true)
                     {
-                        pluginManager.SetPropertyValue("RotTyreSlip_FL", this.GetType(), 1);
+                        //from javascript
+                        /*if($prop('DataCorePlugin.GameData.NewData.SpeedKmh') > 0.1 ){
+	                        var TyreRPS = Math.abs($prop('DataCorePlugin.ExternalScript.TyreRPS_FL'));
+	                        var Speed = $prop('DataCorePlugin.ExternalScript.Speedms');
+	                        var Slip = 0;
+	                        Slip = (Speed - $prop('DataCorePlugin.ExternalScript.TyreDiameterFront') * TyreRPS / 2) / Speed ;
+	                        if(Slip > 0 && $prop('DataCorePlugin.GameData.NewData.SpeedKmh') < 5){
+		                        return 0;
+	                        }else{
+		                        return Slip;
+	                        }
+                        } else {return 0;}
+                        */
+                        if (Speedms > 0.01)
+                        {
+                            for (int i = 0; i < TyreDiameter.Length; i++)
+                            {
+                                RotTyreSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / Speedms;
+                                if(RotTyreSlip[i] > 0 && Speedms < 1.5)
+                                {
+                                    RotTyreSlip[i] = 0;
+                                }
+                            }
+                            pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_FL", this.GetType(), RotTyreSlip[0]);
+                            pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_FR", this.GetType(), RotTyreSlip[1]);
+                            pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RL", this.GetType(), RotTyreSlip[2]);
+                            pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RR", this.GetType(), RotTyreSlip[3]);
+                        }
                     }
                 }
 
@@ -206,7 +245,7 @@ namespace Viper.PluginCalcRotWheelSlip
 
             pluginManager.AddAction("CalcRotWheelSlip.ResetTyreDiameter", this.GetType(), (a, b) =>
             {
-                this.TyreDiameterCalculated = false;
+                this.reset = true;
             });
         }
     }
