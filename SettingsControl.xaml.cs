@@ -24,12 +24,39 @@ namespace Viper.PluginCalcRotWheelSlip
         public SettingsControl()
         {
             InitializeComponent();
-            TestField.Value = 5;
+            Speed.Value = AccSpeed.Value;
+            //Speed.
         }
 
-        public double GetValue()
+        private void Speed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
-            return (double)TestField.Value;
+            AccSpeed.Value = (int)Speed.Value;
         }
+
+        private void Brake_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+
+        }
+
+        private void Throttle_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+
+        }
+
+        private void Vel_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
+        {
+
+        }
+    }
+
+    public class AccSpeed
+    {
+        /*private static int Speed = 20;
+        public static int Value
+        {
+            get { return Speed; }
+            set { Speed = value; }
+        }*/
+        public static int Value { get; set; }
     }
 }

@@ -105,9 +105,9 @@ namespace Viper.PluginCalcRotWheelSlip
                         pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RL", this.GetType(), 0);
                         pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RR", this.GetType(), 0);
                     }
-
+                    
                     // calculate Tyre Diameter automatic (Speed > 20 km/h, Brake and Throttle = 0) or on manual Override  // TODO: pcars2 mLocalVelocity01/mSpeed , R3R LocalVelocity.X/CarSpeed  between -0.01 and 0.01
-                    if ((data.NewData.SpeedKmh > 20 && data.NewData.Brake == 0 && data.NewData.Throttle == 0 && (VelocityX/Speedms) < 0.01 && TyreDiameterCalculated == false) || manualOverride == true)
+                    if ((data.NewData.SpeedKmh > AccSpeed.Value && data.NewData.Brake == 0 && data.NewData.Throttle == 0 && (VelocityX/Speedms) < 0.01 && TyreDiameterCalculated == false) || manualOverride == true)
                     {
                         //calculate Tyre diameters
                         // from javascript:
@@ -213,6 +213,7 @@ namespace Viper.PluginCalcRotWheelSlip
         /// <param name="pluginManager"></param>
         public void Init(PluginManager pluginManager)
         {
+            AccSpeed.Value = 20;
             //pluginManager.AddProperty("CurrentDateTime", this.GetType(), DateTime.Now);
             pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_FL", this.GetType(), 0);
             pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_FR", this.GetType(), 0);

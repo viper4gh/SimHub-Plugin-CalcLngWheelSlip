@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Viper.PluginCalcRotWheelSlip"
         xmlns:styles="clr-namespace:SimHub.Plugins.Styles;assembly=SimHub.Plugins" xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls" x:Class="Viper.PluginCalcRotWheelSlip.SettingsControl"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="600" d:DesignWidth="400">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -14,7 +14,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />-->
                 <ResourceDictionary Source="pack://application:,,,/SimHub.Plugins;component/Styles/SimHubStyles.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
@@ -26,12 +26,30 @@
             <RowDefinition Height="87*"/>
         </Grid.RowDefinitions>
         <styles:SHSection Title="Plugin Options" Grid.RowSpan="2">
-            <StackPanel Margin="0,0,-10,-15">
-                <styles:SHButtonPrimary HorizontalAlignment="Left" Content="Test button"/>
-                <styles:SHButtonSecondary HorizontalAlignment="Left" Content="Secondary button"/>
-                <styles:SHLinkButton HorizontalAlignment="Left" Content="Link button"/>
-                <styles:SHLinkButtonSmall HorizontalAlignment="Left" Content="Link button small"/>
-                <Custom:NumericUpDown x:Name="TestField"/>
+            <StackPanel >
+
+                <Grid HorizontalAlignment="Left" Height="309" Width="360">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox HorizontalAlignment="Left" Height="15" Margin="10,18,0,18" TextWrapping="Wrap" Text="Speed min km/h" Width="153" BorderBrush="White"/>
+                    <Custom:NumericUpDown x:Name="Speed" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" ValueChanged="Speed_ValueChanged" Margin="67,18,10,18" Grid.Column="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="15" Margin="10,18,0,18" TextWrapping="Wrap" Text="Brake max %" Width="153" BorderBrush="White" Grid.Row="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="15" Margin="10,18,0,18" TextWrapping="Wrap" Text="Throttle max %" Width="153" BorderBrush="White" Grid.Row="2"/>
+                    <TextBox HorizontalAlignment="Left" Height="15" Margin="10,18,0,18" TextWrapping="Wrap" Text="VelocityX/Speed" Width="153" BorderBrush="White" Grid.Row="3"/>
+                    <Custom:NumericUpDown x:Name="Brake" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="67,18,10,18" Grid.Column="1" Grid.Row="1" ValueChanged="Brake_ValueChanged"/>
+                    <Custom:NumericUpDown x:Name="Vel" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="67,18,10,18" Grid.Column="1" Grid.Row="3" ValueChanged="Vel_ValueChanged"/>
+                    <Custom:NumericUpDown x:Name="Throttle" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="67,18,10,18" Grid.Column="1" Grid.Row="2" ValueChanged="Throttle_ValueChanged"/>
+                </Grid>
+                <TextBox Height="120" TextWrapping="Wrap" Text="This plugin first calculates your car's tyre diameters by using the Tyre RPS and Car Speed. &#xA;This values are saved and then used to calculate the Tyre Slips.&#xA;The Tyre Slip value Range is -1.0 to +1.0.&#xA;+1.0 = 100% Tyre Lock&#xA;-1.0 = 100% Tyre Spin = The tyre rotates at least twice the speed of the corresponding vehicle speed." Foreground="{DynamicResource BlackBrush}" Background="{x:Null}"/>
 
             </StackPanel>
         </styles:SHSection>
