@@ -6,15 +6,12 @@ using System.Windows.Controls;
 
 namespace Viper.PluginCalcRotWheelSlip
 {
-    
     [PluginName("Calculate Rotational Tyre Slip 0.1")]
     [PluginDescrition("Calculates Tyre Slip by the relationship between Tyre RPS and Car Speed. Perfect for analyzing your Throttle and Brake input and TC/ABS settings\nFor Project CARS 2 and R3E only")]
     [PluginAuthor("Viper")]
     
     public class DataPlugin : IPlugin, IDataPlugin, IWPFSettings
     {
-        //private int SpeedWarningLevel = 100;
-        private object TyreDiameterFront;
         private bool TyreDiameterCalculated = false;
         private bool manualOverride = false;
         private bool reset = false;
@@ -42,28 +39,16 @@ namespace Viper.PluginCalcRotWheelSlip
         /// <param name="data"></param>
         public void DataUpdate(PluginManager pluginManager, ref GameData data)
         {
-            //pluginManager.SetPropertyValue("CurrentDateTime", this.GetType(), DateTime.Now);
-            //pluginManager.TriggerInput()
-
             curGame = pluginManager.GetPropertyValue("DataCorePlugin.CurrentGame").ToString();
 
             if (data.GameRunning)
             {
-                /*if (data.OldData != null && data.NewData != null)
-                {
-                    if (data.OldData.SpeedKmh < SpeedWarningLevel && data.OldData.SpeedKmh >= SpeedWarningLevel)
-                    {
-                        pluginManager.TriggerEvent("SpeedWarning", this.GetType());
-                    }
-                }*/
                 if (data.OldData != null && data.NewData != null)   //TODO: check a record where the game was captured from startup on
                 {
                     //////////////////////////////////////////// 
                     //map raw game variables for PCars2 and RRRE
                     if (curGame == "PCars2")
                     {
-                        /*tmpObj = pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mLocalVelocity01");
-                        VelocityX = Convert.ToDouble((float)tmpObj);*/
                         VelocityX = Math.Abs((Convert.ToDouble((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mLocalVelocity01"))));
                         Speedms = (float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mSpeed");
                         tmpObj = pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS01");
@@ -71,14 +56,9 @@ namespace Viper.PluginCalcRotWheelSlip
                         TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS02"));
                         TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS03"));
                         TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS04"));
-                        /*for (int i = 0; i < TyreRPS.Length; i++)
-                        {
-                        }*/
                     }
                     else if (curGame == "RRRE")
                     {
-                        /*tmpObj = pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.Player.LocalVelocity.X");
-                        VelocityX = (double)tmpObj;*/
                         VelocityX = Math.Abs((double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.Player.LocalVelocity.X"));
                         Speedms = (float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.CarSpeed");
                         TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.TireRps.FrontLeft"));
@@ -96,10 +76,10 @@ namespace Viper.PluginCalcRotWheelSlip
                         TyreDiameterCalculated = false;
                         reset = false;
                         pluginManager.SetPropertyValue("CalcRotWheelSlip.TyreDiameterComputed", this.GetType(), false);
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_FL", this.GetType(), "[NULL]");
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_FR", this.GetType(), "[NULL]");
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_RL", this.GetType(), "[NULL]");
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_RR", this.GetType(), "[NULL]");
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_FL", this.GetType(), "-");
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_FR", this.GetType(), "-");
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_RL", this.GetType(), "-");
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_RR", this.GetType(), "-");
                         pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_FL", this.GetType(), 0);
                         pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_FR", this.GetType(), 0);
                         pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RL", this.GetType(), 0);
@@ -107,21 +87,9 @@ namespace Viper.PluginCalcRotWheelSlip
                     }
                     
                     // calculate Tyre Diameter automatic (Speed > 20 km/h, Brake and Throttle = 0) or on manual Override  // TODO: pcars2 mLocalVelocity01/mSpeed , R3R LocalVelocity.X/CarSpeed  between -0.01 and 0.01
-                    if ((data.NewData.SpeedKmh > AccSpeed.Value && data.NewData.Brake == 0 && data.NewData.Throttle == 0 && (VelocityX/Speedms) < 0.01 && TyreDiameterCalculated == false) || manualOverride == true)
+                    if ((data.NewData.SpeedKmh > AccSpeed.Value && data.NewData.Brake == 0 && data.NewData.Throttle == 0 && (VelocityX/Speedms) < 0.004 && TyreDiameterCalculated == false) || manualOverride == true)
                     {
                         //calculate Tyre diameters
-                        // from javascript:
-                        /*if($prop('DataCorePlugin.GameData.NewData.SpeedKmh') > 0 ){
-	                        var TyreRPS = Math.abs($prop('DataCorePlugin.ExternalScript.TyreRPS_FL'));
-	                        var Speed = $prop('DataCorePlugin.ExternalScript.Speedms');
-	                        var diameter = 1;
-	                        if(TyreRPS != 0) {
-		                        //diameter = Speed / TyreRPS / Math.PI * (360 / 180 * Math.PI); // in brackets calculation radians to degree for full 360° circle
-		                        diameter = Speed / TyreRPS * 2;
-	                        }
-	                        return diameter;
-                        } else {return "NA"}
-                        */
                         for (int i = 0; i < TyreRPS.Length; i++)
                         {
                             if(TyreRPS[i] != 0)
@@ -142,46 +110,34 @@ namespace Viper.PluginCalcRotWheelSlip
                     // calculate Tyre Lock / Spin
                     if (TyreDiameterCalculated == true)
                     {
-                        //from javascript
-                        /*if($prop('DataCorePlugin.GameData.NewData.SpeedKmh') > 0.1 ){
-	                        var TyreRPS = Math.abs($prop('DataCorePlugin.ExternalScript.TyreRPS_FL'));
-	                        var Speed = $prop('DataCorePlugin.ExternalScript.Speedms');
-	                        var Slip = 0;
-	                        Slip = (Speed - $prop('DataCorePlugin.ExternalScript.TyreDiameterFront') * TyreRPS / 2) / Speed ;
-	                        if(Slip > 0 && $prop('DataCorePlugin.GameData.NewData.SpeedKmh') < 5){
-		                        return 0;
-	                        }else{
-		                        return Slip;
-	                        }
-                        } else {return 0;}
-                        */
-                        if (Speedms > 0.01)
+                        for (int i = 0; i < TyreDiameter.Length; i++)
                         {
-                            for (int i = 0; i < TyreDiameter.Length; i++)
+                            //calculate over 0.01 m/s only, because the Slip results are extreme high below (Division by Speed)
+                            if (Speedms > 0.01)
                             {
                                 RotTyreSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / Speedms;
-                                if(RotTyreSlip[i] > 0 && Speedms < 1.5)
+                                //don't show tyre lock below 1 m/s
+                                if (RotTyreSlip[i] > 0 && Speedms < 1)
                                 {
                                     RotTyreSlip[i] = 0;
                                 }
                             }
-                            pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_FL", this.GetType(), RotTyreSlip[0]);
-                            pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_FR", this.GetType(), RotTyreSlip[1]);
-                            pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RL", this.GetType(), RotTyreSlip[2]);
-                            pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RR", this.GetType(), RotTyreSlip[3]);
+                            else
+                            {
+                                // below 0.01 m/s show an imaginery Slip value defined by TyreRPS directly
+                                RotTyreSlip[i] = TyreRPS[i] / 10;
+                            }
+                            
                         }
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_FL", this.GetType(), RotTyreSlip[0]);
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_FR", this.GetType(), RotTyreSlip[1]);
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RL", this.GetType(), RotTyreSlip[2]);
+                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RR", this.GetType(), RotTyreSlip[3]);
                     }
                 }
 
             }
         }
-
-        /*public float[] calcTyreDiameter()
-        {
-            float[] tmpTyreDiameter = new float[] { 0.65f, 0.65f, 0.7f, 0.7f };
-            //return tmpTyreDiameter;
-            return tmpTyreDiameter;
-        }*/
 
                         /// <summary>
                         /// Called at plugin manager stop, close/displose anything needed here !
@@ -214,36 +170,23 @@ namespace Viper.PluginCalcRotWheelSlip
         public void Init(PluginManager pluginManager)
         {
             AccSpeed.Value = 20;
-            //pluginManager.AddProperty("CurrentDateTime", this.GetType(), DateTime.Now);
             pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_FL", this.GetType(), 0);
             pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_FR", this.GetType(), 0);
             pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_RL", this.GetType(), 0);
             pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_RR", this.GetType(), 0);
 
-            pluginManager.AddProperty("CalcRotWheelSlip.Computed.TyreDiameter_FL", this.GetType(), "[NULL]");
-            pluginManager.AddProperty("CalcRotWheelSlip.Computed.TyreDiameter_FR", this.GetType(), "[NULL]");
-            pluginManager.AddProperty("CalcRotWheelSlip.Computed.TyreDiameter_RL", this.GetType(), "[NULL]");
-            pluginManager.AddProperty("CalcRotWheelSlip.Computed.TyreDiameter_RR", this.GetType(), "[NULL]");
+            pluginManager.AddProperty("CalcRotWheelSlip.Computed.TyreDiameter_FL", this.GetType(), "-");
+            pluginManager.AddProperty("CalcRotWheelSlip.Computed.TyreDiameter_FR", this.GetType(), "-");
+            pluginManager.AddProperty("CalcRotWheelSlip.Computed.TyreDiameter_RL", this.GetType(), "-");
+            pluginManager.AddProperty("CalcRotWheelSlip.Computed.TyreDiameter_RR", this.GetType(), "-");
 
             pluginManager.AddProperty("CalcRotWheelSlip.TyreDiameterComputed", this.GetType(), false);
-
-            /*pluginManager.AddEvent("SpeedWarning", this.GetType());
-
-            pluginManager.AddAction("IncrementSpeedWarning", this.GetType(), (a, b) =>
-            {
-                this.SpeedWarningLevel++;
-            });
-
-            pluginManager.AddAction("DecrementSpeedWarning", this.GetType(), (a, b) =>
-            {
-                this.SpeedWarningLevel--;
-            });*/
 
             pluginManager.AddAction("CalcRotWheelSlip.CaptureTyreDiameter", this.GetType(), (a, b) =>
             {
                 this.manualOverride = true;
             });
-
+            
             pluginManager.AddAction("CalcRotWheelSlip.ResetTyreDiameter", this.GetType(), (a, b) =>
             {
                 this.reset = true;
