@@ -87,7 +87,7 @@ namespace Viper.PluginCalcRotWheelSlip
                     }
                     
                     // calculate Tyre Diameter automatic (Speed > 20 km/h, Brake and Throttle = 0) or on manual Override  // TODO: pcars2 mLocalVelocity01/mSpeed , R3R LocalVelocity.X/CarSpeed  between -0.01 and 0.01
-                    if ((data.NewData.SpeedKmh > AccSpeed.Value && data.NewData.Brake == 0 && data.NewData.Throttle == 0 && (VelocityX/Speedms) < 0.004 && TyreDiameterCalculated == false) || manualOverride == true)
+                    if ((data.NewData.SpeedKmh > AccSpeed.Value && data.NewData.Brake <= AccBrake.Value && data.NewData.Throttle <= AccThrottle.Value && (VelocityX/Speedms) < AccVel.Value && TyreDiameterCalculated == false) || manualOverride == true)
                     {
                         //calculate Tyre diameters
                         for (int i = 0; i < TyreRPS.Length; i++)
@@ -112,7 +112,7 @@ namespace Viper.PluginCalcRotWheelSlip
                     {
                         for (int i = 0; i < TyreDiameter.Length; i++)
                         {
-                            //calculate over 0.01 m/s only, because the Slip results are extreme high below (Division by Speed)
+                            //calculate over 0.01 m/s only, because the Slip results are extreme high below 0.01 (Division by Speed)
                             if (Speedms > 0.01)
                             {
                                 RotTyreSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / Speedms;
@@ -139,12 +139,13 @@ namespace Viper.PluginCalcRotWheelSlip
             }
         }
 
-                        /// <summary>
-                        /// Called at plugin manager stop, close/displose anything needed here !
-                        /// </summary>
-                        /// <param name="pluginManager"></param>
-                        public void End(PluginManager pluginManager)
+        /// <summary>
+        /// Called at plugin manager stop, close/displose anything needed here !
+        /// </summary>
+        /// <param name="pluginManager"></param>
+        public void End(PluginManager pluginManager)
         {
+            
         }
 
         /// <summary>
@@ -170,6 +171,10 @@ namespace Viper.PluginCalcRotWheelSlip
         public void Init(PluginManager pluginManager)
         {
             AccSpeed.Value = 20;
+            AccBrake.Value = 0;
+            AccThrottle.Value = 0;
+            AccVel.Value = 0.004;
+            string settings_path = PluginManager.GetCommonStoragePath();
             pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_FL", this.GetType(), 0);
             pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_FR", this.GetType(), 0);
             pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_RL", this.GetType(), 0);

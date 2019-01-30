@@ -25,9 +25,9 @@
             <RowDefinition Height="13*"/>
             <RowDefinition Height="87*"/>
         </Grid.RowDefinitions>
-        <styles:SHSection Title="Plugin Options" Grid.RowSpan="2">
+        <styles:SHSection x:Name="SHSectionPluginOptions" Title="Plugin Options" Grid.RowSpan="2" IsVisibleChanged="SHSection_IsVisibleChanged">
             <StackPanel >
-
+                <TextBlock HorizontalAlignment="Left" Margin="34,10,0,10" TextWrapping="Wrap" Text="Limits for triggering the tyre diameter calculation" VerticalAlignment="Top"/>
                 <Grid HorizontalAlignment="Left" Height="309" Width="360">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -40,16 +40,18 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <TextBox HorizontalAlignment="Left" Height="15" Margin="10,18,0,18" TextWrapping="Wrap" Text="Speed min km/h" Width="153" BorderBrush="White"/>
-                    <Custom:NumericUpDown x:Name="Speed" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" ValueChanged="Speed_ValueChanged" Margin="67,18,10,18" Grid.Column="1"/>
-                    <TextBox HorizontalAlignment="Left" Height="15" Margin="10,18,0,18" TextWrapping="Wrap" Text="Brake max %" Width="153" BorderBrush="White" Grid.Row="1"/>
-                    <TextBox HorizontalAlignment="Left" Height="15" Margin="10,18,0,18" TextWrapping="Wrap" Text="Throttle max %" Width="153" BorderBrush="White" Grid.Row="2"/>
-                    <TextBox HorizontalAlignment="Left" Height="15" Margin="10,18,0,18" TextWrapping="Wrap" Text="VelocityX/Speed" Width="153" BorderBrush="White" Grid.Row="3"/>
-                    <Custom:NumericUpDown x:Name="Brake" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="67,18,10,18" Grid.Column="1" Grid.Row="1" ValueChanged="Brake_ValueChanged"/>
-                    <Custom:NumericUpDown x:Name="Vel" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="67,18,10,18" Grid.Column="1" Grid.Row="3" ValueChanged="Vel_ValueChanged"/>
-                    <Custom:NumericUpDown x:Name="Throttle" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="67,18,10,18" Grid.Column="1" Grid.Row="2" ValueChanged="Throttle_ValueChanged"/>
+                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="66,24,0,23" TextWrapping="Wrap" Text="Speed min km/h" Width="96" />
+                    <Custom:NumericUpDown x:Name="Speed" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" ValueChanged="Speed_ValueChanged" Margin="38,18,38,18" Grid.Column="1" Minimum="1" Maximum="250"/>
+                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="66,24,0,23" TextWrapping="Wrap" Text="Brake max %" Width="153" Grid.Row="1" Grid.ColumnSpan="2"/>
+                    <Custom:NumericUpDown x:Name="Brake" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="38,18,38,18" Grid.Column="1" Grid.Row="1" ValueChanged="Brake_ValueChanged" Minimum="0" Maximum="100"/>
+                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="66,24,0,23" TextWrapping="Wrap" Text="Throttle max %" Width="153" Grid.Row="2" Grid.ColumnSpan="2"/>
+                    <Custom:NumericUpDown x:Name="Throttle" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="38,18,38,18" Grid.Column="1" Grid.Row="2" ValueChanged="Throttle_ValueChanged" Minimum="0" Maximum="100"/>
+                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="66,24,0,23" TextWrapping="Wrap" Text="VelocityX/Speed max" Width="153" Grid.Row="3" ToolTip="Longitudinal car speed ratio for preventing detection in turns" Grid.ColumnSpan="2"/>
+                    <Custom:NumericUpDown x:Name="Vel" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="38,18,38,18" Grid.Column="1" Grid.Row="3" ValueChanged="Vel_ValueChanged" Interval="0.001" Minimum="0.001" Maximum="0.01"/>
                 </Grid>
-                <TextBox Height="120" TextWrapping="Wrap" Text="This plugin first calculates your car's tyre diameters by using the Tyre RPS and Car Speed. &#xA;This values are saved and then used to calculate the Tyre Slips.&#xA;The Tyre Slip value Range is -1.0 to +1.0.&#xA;+1.0 = 100% Tyre Lock&#xA;-1.0 = 100% Tyre Spin = The tyre rotates at least twice the speed of the corresponding vehicle speed." Foreground="{DynamicResource BlackBrush}" Background="{x:Null}"/>
+                <TextBlock TextWrapping="Wrap" Text="Plugin Description" FontWeight="Bold" Margin="0,0,0,5"/>
+                <TextBlock Height="139" TextWrapping="Wrap" Text="This plugin first calculates your car's tyre diameters by using the Tyre RPS and Car Speed. &#xA;This values are saved and then used to calculate the rotational Tyre Slips.&#xA;+1.0 = 100% Tyre Lock&#xA;   0 = no Tyre Slip&#xA;-1.0 = 100% Tyre Spin = The tyre rotates at least twice the speed of the corresponding vehicle speed." Foreground="{DynamicResource BlackBrush}" Background="{x:Null}"/>
+                
 
             </StackPanel>
         </styles:SHSection>
