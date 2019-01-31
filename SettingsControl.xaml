@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Viper.PluginCalcRotWheelSlip"
         xmlns:styles="clr-namespace:SimHub.Plugins.Styles;assembly=SimHub.Plugins" xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls" x:Class="Viper.PluginCalcRotWheelSlip.SettingsControl"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="400">
+             d:DesignHeight="650" d:DesignWidth="400">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -28,7 +28,7 @@
         <styles:SHSection x:Name="SHSectionPluginOptions" Title="Plugin Options" Grid.RowSpan="2" IsVisibleChanged="SHSection_IsVisibleChanged">
             <StackPanel >
                 <TextBlock HorizontalAlignment="Left" Margin="34,10,0,10" TextWrapping="Wrap" Text="Limits for triggering the tyre diameter calculation" VerticalAlignment="Top"/>
-                <Grid HorizontalAlignment="Left" Height="309" Width="360">
+                <Grid HorizontalAlignment="Left" Height="247" Width="360">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -40,17 +40,17 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="66,24,0,23" TextWrapping="Wrap" Text="Speed min km/h" Width="96" />
-                    <Custom:NumericUpDown x:Name="Speed" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" ValueChanged="Speed_ValueChanged" Margin="38,18,38,18" Grid.Column="1" Minimum="1" Maximum="250"/>
-                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="66,24,0,23" TextWrapping="Wrap" Text="Brake max %" Width="153" Grid.Row="1" Grid.ColumnSpan="2"/>
-                    <Custom:NumericUpDown x:Name="Brake" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="38,18,38,18" Grid.Column="1" Grid.Row="1" ValueChanged="Brake_ValueChanged" Minimum="0" Maximum="100"/>
-                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="66,24,0,23" TextWrapping="Wrap" Text="Throttle max %" Width="153" Grid.Row="2" Grid.ColumnSpan="2"/>
-                    <Custom:NumericUpDown x:Name="Throttle" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="38,18,38,18" Grid.Column="1" Grid.Row="2" ValueChanged="Throttle_ValueChanged" Minimum="0" Maximum="100"/>
-                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="66,24,0,23" TextWrapping="Wrap" Text="VelocityX/Speed max" Width="153" Grid.Row="3" ToolTip="Longitudinal car speed ratio for preventing detection in turns" Grid.ColumnSpan="2"/>
-                    <Custom:NumericUpDown x:Name="Vel" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="38,18,38,18" Grid.Column="1" Grid.Row="3" ValueChanged="Vel_ValueChanged" Interval="0.001" Minimum="0.001" Maximum="0.01"/>
+                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="66,17,0,17" TextWrapping="Wrap" Text="Speed min km/h" Width="96" />
+                    <Custom:NumericUpDown x:Name="Speed" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" ValueChanged="Speed_ValueChanged" Margin="38,11,38,12" Grid.Column="1" Minimum="1" Maximum="250"/>
+                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="66,17,0,17" TextWrapping="Wrap" Text="Brake max %" Width="153" Grid.Row="1" Grid.ColumnSpan="2"/>
+                    <Custom:NumericUpDown x:Name="Brake" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="38,11,38,12" Grid.Column="1" Grid.Row="1" ValueChanged="Brake_ValueChanged" Minimum="0" Maximum="100"/>
+                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="66,17,0,17" TextWrapping="Wrap" Text="Throttle max %" Width="153" Grid.Row="2" Grid.ColumnSpan="2"/>
+                    <Custom:NumericUpDown x:Name="Throttle" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="38,11,38,12" Grid.Column="1" Grid.Row="2" ValueChanged="Throttle_ValueChanged" Minimum="0" Maximum="100"/>
+                    <TextBlock HorizontalAlignment="Left" Height="15" Margin="66,17,0,17" TextWrapping="Wrap" Text="VelocityX/Speed max" Width="153" Grid.Row="3" ToolTip="Longitudinal car speed ratio for preventing detection in turns" Grid.ColumnSpan="2"/>
+                    <Custom:NumericUpDown x:Name="Vel" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="38,11,38,12" Grid.Column="1" Grid.Row="3" ValueChanged="Vel_ValueChanged" Interval="0.001" Minimum="0.001" Maximum="0.01"/>
                 </Grid>
                 <TextBlock TextWrapping="Wrap" Text="Plugin Description" FontWeight="Bold" Margin="0,0,0,5"/>
-                <TextBlock Height="165" TextWrapping="Wrap" Text="This plugin first calculates your car's tyre diameters by using the Tyre RPS and Car Speed. &#xA;These values are saved and then used to calculate the rotational Tyre Slips.&#xA;+1.0 = 100% Tyre Lock&#xA;   0 = no Tyre Slip&#xA;-1.0 = 100% Tyre Spin = The tyre rotates at least twice the speed of the corresponding vehicle speed.&#xA;All the new values are available as properties CalcRotWheelSlip.*" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}"/>
+                <TextBlock Height="196" TextWrapping="Wrap" Text="This plugin first calculates your car's tyre diameters by using the Tyre RPS and Car Speed. &#xA;These values are saved and then used to calculate the rotational Tyre Slips.&#xA;+1.0 = 100% Tyre Lock&#xA;   0 = no Tyre Slip&#xA;-1.0 = 100% Tyre Spin = The tyre rotates at least twice the speed of the corresponding vehicle speed.&#xA;All the new values are available as properties CalcRotWheelSlip.*&#xA;Further there are 2 new controller actions available for manual overriding the tyre diameter detection and to reset the automatic detection (named CalcRotWheelSlip.*)" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}"/>
                 
 
             </StackPanel>

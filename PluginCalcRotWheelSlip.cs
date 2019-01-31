@@ -206,7 +206,7 @@ namespace Viper.PluginCalcRotWheelSlip
 
             pluginManager.AddProperty("CalcRotWheelSlip.TyreDiameterComputed", this.GetType(), false);
 
-            pluginManager.AddAction("CalcRotWheelSlip.CaptureTyreDiameter", this.GetType(), (a, b) =>
+            pluginManager.AddAction("CalcRotWheelSlip.CalcTyreDiameter", this.GetType(), (a, b) =>
             {
                 this.manualOverride = true;
             });

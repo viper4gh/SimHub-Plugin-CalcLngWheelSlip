@@ -80,7 +80,7 @@ namespace Viper.PluginCalcRotWheelSlip
                 // generate JSON file only if something has changed
                 if (value_changed)
                 {
-                    // genereate JSON data
+                    // generate JSON data
                     JObject JSONdata = new JObject(
                         new JProperty("Speed_min", Speed.Value),
                         new JProperty("Brake_max", Brake.Value),
@@ -90,6 +90,7 @@ namespace Viper.PluginCalcRotWheelSlip
                     //string settings_path = AccData.path;
                     try
                     {
+                        // create/write settings file
                         File.WriteAllText(@AccData.path, JSONdata.ToString());
                     }
                     catch
