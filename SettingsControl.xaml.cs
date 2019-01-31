@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace Viper.PluginCalcRotWheelSlip
 {
@@ -27,13 +29,11 @@ namespace Viper.PluginCalcRotWheelSlip
         {
             InitializeComponent();
             first_initialization = true;
-            Speed.Value = AccSpeed.Value;   //triggers Speed_ValueChanged, because of that the value_changed must set to true on this intialization
-            Brake.Value = AccBrake.Value;
-            Throttle.Value = AccThrottle.Value;
-            Vel.Value = AccVel.Value;
+            Speed.Value = AccData.Speed;    //triggers Speed_ValueChanged, because of that "value_changed" must not set to true during the first intialization
+            Brake.Value = AccData.Brake;
+            Throttle.Value = AccData.Throttle;
+            Vel.Value = AccData.Vel;
             first_initialization = false;
-            //Speed. 
-            
         }
 
         private bool value_changed = false;
@@ -42,15 +42,15 @@ namespace Viper.PluginCalcRotWheelSlip
         {
             if (Speed.Value < Speed.Minimum || Speed.Value == null) Speed.Value = Speed.Minimum;
             if (Speed.Value > Speed.Maximum) Speed.Value = Speed.Maximum;
-            AccSpeed.Value = (int)Speed.Value;
-            if(!first_initialization) value_changed = true;
+            AccData.Speed = (int)Speed.Value;
+            if (!first_initialization) value_changed = true;
         }
 
         private void Brake_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
             if (Brake.Value < Brake.Minimum || Brake.Value == null) Brake.Value = Brake.Minimum;
             if (Brake.Value > Brake.Maximum) Brake.Value = Brake.Maximum;
-            AccBrake.Value = (int)Brake.Value;
+            AccData.Brake = (int)Brake.Value;
             if (!first_initialization) value_changed = true;
         }
 
@@ -58,7 +58,7 @@ namespace Viper.PluginCalcRotWheelSlip
         {
             if (Throttle.Value < Throttle.Minimum || Throttle.Value == null) Throttle.Value = Throttle.Minimum;
             if (Throttle.Value > Throttle.Maximum) Throttle.Value = Throttle.Maximum;
-            AccThrottle.Value = (int)Throttle.Value;
+            AccData.Throttle = (int)Throttle.Value; 
             if (!first_initialization) value_changed = true;
         }
 
@@ -66,7 +66,7 @@ namespace Viper.PluginCalcRotWheelSlip
         {
             if (Vel.Value < Vel.Minimum || Vel.Value == null) Vel.Value = Vel.Minimum;
             if (Vel.Value > Vel.Maximum) Vel.Value = Vel.Maximum;
-            AccVel.Value = (double)Vel.Value;
+            AccData.Vel = (double)Vel.Value;
             if (!first_initialization) value_changed = true;
         }
 
@@ -77,12 +77,26 @@ namespace Viper.PluginCalcRotWheelSlip
             //Saving on leaving Settings View only
             if (!SHSectionPluginOptions.IsVisible)
             {
-                
+                // generate JSON file only if something has changed
                 if (value_changed)
                 {
-
-                    //TODO: JSON saving
-                    
+                    // genereate JSON data
+                    JObject JSONdata = new JObject(
+                        new JProperty("Speed_min", Speed.Value),
+                        new JProperty("Brake_max", Brake.Value),
+                        new JProperty("Throttle_max", Throttle.Value),
+                        new JProperty("VelX_max", Vel.Value)
+                        );
+                    //string settings_path = AccData.path;
+                    try
+                    {
+                        File.WriteAllText(@AccData.path, JSONdata.ToString());
+                    }
+                    catch
+                    {
+                        //A MessageBox creates graphical glitches after closing it. Search another way, maybe using the Standard Log in SimHub\Logs
+                        //MessageBox.Show("Cannot create or write the following file: \n" + System.Environment.CurrentDirectory + "\\" + AccData.path, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                     value_changed = false;
                 }
                 
@@ -91,48 +105,24 @@ namespace Viper.PluginCalcRotWheelSlip
         }
     }
 
-    public class AccSpeed
+    //public class for exchanging the data with the main cs file
+    public class AccData
     {
+        public static int Speed { get; set; }
+        public static int Brake { get; set; }
+        public static int Throttle { get; set; }
+        public static double Vel { get; set; }
+        public static string path { get; set; }
+    }
+
+    /*public class AccSpeed
+    {*/
         /*private static int Speed = 20;
         public static int Value
         {
             get { return Speed; }
             set { Speed = value; }
         }*/
-        public static int Value { get; set; }
-    }
-
-    public class AccBrake
-    {
-        /*private static int Brake = 0;
-        public static int Value
-        {
-            get { return Brake; }
-            set { Speed = value; }
-        }*/
-        public static int Value { get; set; }
-    }
-
-    public class AccThrottle
-    {
-        /*private static int Throttle = 0;
-        public static int Value
-        {
-            get { return Throttle; }
-            set { Speed = value; }
-        }*/
-        public static int Value { get; set; }
-    }
-
-    public class AccVel
-    {
-        /*private static int Vel = 0.004;
-        public static double Value
-        {
-            get { return Vel; }
-            set { Speed = value; }
-        }*/
-        public static double Value { get; set; }
-    }
-
+        /*public static int Value { get; set; }
+    }*/
 }

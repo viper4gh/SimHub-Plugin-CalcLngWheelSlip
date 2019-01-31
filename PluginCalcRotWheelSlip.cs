@@ -3,7 +3,8 @@ using SimHub.Plugins;
 using System;
 using System.Windows.Forms;
 using System.Windows.Controls;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace Viper.PluginCalcRotWheelSlip
 {
@@ -88,7 +89,7 @@ namespace Viper.PluginCalcRotWheelSlip
                     }
                     
                     // calculate Tyre Diameter automatic (Speed > 20 km/h, Brake and Throttle = 0) or on manual Override  // TODO: pcars2 mLocalVelocity01/mSpeed , R3R LocalVelocity.X/CarSpeed  between -0.01 and 0.01
-                    if ((data.NewData.SpeedKmh > AccSpeed.Value && data.NewData.Brake <= AccBrake.Value && data.NewData.Throttle <= AccThrottle.Value && (VelocityX/Speedms) < AccVel.Value && TyreDiameterCalculated == false) || manualOverride == true)
+                    if ((data.NewData.SpeedKmh > AccData.Speed && data.NewData.Brake <= AccData.Brake && data.NewData.Throttle <= AccData.Throttle && (VelocityX/Speedms) < AccData.Vel && TyreDiameterCalculated == false) || manualOverride == true)
                     {
                         //calculate Tyre diameters
                         for (int i = 0; i < TyreRPS.Length; i++)
@@ -171,11 +172,28 @@ namespace Viper.PluginCalcRotWheelSlip
         /// <param name="pluginManager"></param>
         public void Init(PluginManager pluginManager)
         {
-            AccSpeed.Value = 20;
-            AccBrake.Value = 0;
-            AccThrottle.Value = 0;
-            AccVel.Value = 0.004;
-            string settings_path = PluginManager.GetCommonStoragePath();
+            // set path/filename for settings file
+            AccData.path = PluginManager.GetCommonStoragePath("Viper.PluginCalcRotWheelSlip.json");
+            
+            // try to read settings file
+            try
+            {
+                JObject JSONdata = JObject.Parse(File.ReadAllText(@AccData.path));
+                AccData.Speed = (int)JSONdata["Speed_min"];
+                AccData.Brake = (int)JSONdata["Brake_max"];
+                AccData.Throttle = (int)JSONdata["Throttle_max"];
+                AccData.Vel = (double)JSONdata["VelX_max"];
+            }
+            // if there is no settings file, use the defaults
+            catch
+            {
+                AccData.Speed = 20;
+                AccData.Brake = 0;
+                AccData.Throttle = 0;
+                AccData.Vel = 0.004;
+            }
+            
+            
             pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_FL", this.GetType(), 0);
             pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_FR", this.GetType(), 0);
             pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_RL", this.GetType(), 0);
