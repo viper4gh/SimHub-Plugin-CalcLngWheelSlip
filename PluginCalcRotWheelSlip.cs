@@ -3,6 +3,7 @@ using SimHub.Plugins;
 using System;
 using System.Windows.Forms;
 using System.Windows.Controls;
+using Newtonsoft.Json;
 
 namespace Viper.PluginCalcRotWheelSlip
 {

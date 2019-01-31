@@ -32,7 +32,8 @@ namespace Viper.PluginCalcRotWheelSlip
             Throttle.Value = AccThrottle.Value;
             Vel.Value = AccVel.Value;
             first_initialization = false;
-            //Speed.
+            //Speed. 
+            
         }
 
         private bool value_changed = false;

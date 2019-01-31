@@ -50,7 +50,7 @@
                     <Custom:NumericUpDown x:Name="Vel" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}" Margin="38,18,38,18" Grid.Column="1" Grid.Row="3" ValueChanged="Vel_ValueChanged" Interval="0.001" Minimum="0.001" Maximum="0.01"/>
                 </Grid>
                 <TextBlock TextWrapping="Wrap" Text="Plugin Description" FontWeight="Bold" Margin="0,0,0,5"/>
-                <TextBlock Height="139" TextWrapping="Wrap" Text="This plugin first calculates your car's tyre diameters by using the Tyre RPS and Car Speed. &#xA;This values are saved and then used to calculate the rotational Tyre Slips.&#xA;+1.0 = 100% Tyre Lock&#xA;   0 = no Tyre Slip&#xA;-1.0 = 100% Tyre Spin = The tyre rotates at least twice the speed of the corresponding vehicle speed." Foreground="{DynamicResource BlackBrush}" Background="{x:Null}"/>
+                <TextBlock Height="165" TextWrapping="Wrap" Text="This plugin first calculates your car's tyre diameters by using the Tyre RPS and Car Speed. &#xA;These values are saved and then used to calculate the rotational Tyre Slips.&#xA;+1.0 = 100% Tyre Lock&#xA;   0 = no Tyre Slip&#xA;-1.0 = 100% Tyre Spin = The tyre rotates at least twice the speed of the corresponding vehicle speed.&#xA;All the new values are available as properties CalcRotWheelSlip.*" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}"/>
                 
 
             </StackPanel>
