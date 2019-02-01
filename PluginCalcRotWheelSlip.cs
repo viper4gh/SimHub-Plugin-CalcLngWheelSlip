@@ -88,10 +88,11 @@ namespace Viper.PluginCalcRotWheelSlip
                         pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RR", this.GetType(), 0);
                     }
                     
-                    // calculate Tyre Diameter automatic (Speed > 20 km/h, Brake and Throttle = 0) or on manual Override  // TODO: pcars2 mLocalVelocity01/mSpeed , R3R LocalVelocity.X/CarSpeed  between -0.01 and 0.01
+                    // calculate Tyre Diameter automatic (Speed > 20 km/h, Brake and Throttle = 0) or on manual Override 
+                    // The if statement is for finding a moment when the tyre slip is nearly 0, because only then the car speed = tyre surface speed and the only then the tyre diameter calculation is correct
                     if ((data.NewData.SpeedKmh > AccData.Speed && data.NewData.Brake <= AccData.Brake && data.NewData.Throttle <= AccData.Throttle && (VelocityX/Speedms) < AccData.Vel && TyreDiameterCalculated == false) || manualOverride == true)
                     {
-                        //calculate Tyre diameters
+                        //calculate tyre diameters
                         for (int i = 0; i < TyreRPS.Length; i++)
                         {
                             if(TyreRPS[i] != 0)
@@ -117,6 +118,28 @@ namespace Viper.PluginCalcRotWheelSlip
                             //calculate over 0.01 m/s only, because the Slip results are extreme high below 0.01 (Division by Speed)
                             if (Speedms > 0.01)
                             {
+                                /*Understanding calculation
+                                 For the rotational tyre slip we need the ratio between the tyre surface speed and the car speed.
+                                 Car speed is directly available, but the tyre surface speed must be calculated.
+                                    tyre surface speed(m/s) = tyre diameter(m) * Pi * tyre revolutions per second
+                                 The games provide TyreRPS, but it is in radiants per second, you have to calculate the revolutions per second first.
+                                    tyre rotation degrees per second = TyreRPS * 180 / Pi
+                                    tyre revolutions per second (one full revolution = 360°) = TyreRPS * 180 / Pi / 360
+                                And now all together:
+                                    tyre surface speed(m/s) = tyre diameter(m) * Pi * TyreRPS * 180 / Pi / 360
+                                You can eliminate Pi and shorten 180/360
+                                    tyre surface speed(m/s) = tyre diameter(m) * TyreRPS / 2
+                                Or for tyre diameter calculation
+                                    tyre diameter(m) = tyre surface speed(m/s) / TyreRPS * 2
+                                If the tyre slip is 0 then tyre surface speed = car speed, which is used abobe for the tyre diameter calculation
+                                    tyre diameter(m) = car speed(m/s) / TyreRPS * 2
+                                The ratio is now
+                                    (car speed - tyre surface speed) / car speed
+                                Some Examples:
+                                    no tyre slip: (50 m/s - 50 m/s) / 50 m/s = 0
+                                    full tyre lock: (50 m/s - 0 m/s) / 50 m/s = 1
+                                    tyre spins with double car speed: (50 m/s - 100 m/s) / 50 m/s = -1
+                                */
                                 RotTyreSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / Speedms;
                                 //don't show tyre lock below 1 m/s
                                 if (RotTyreSlip[i] > 0 && Speedms < 1)
