@@ -5,10 +5,10 @@ It calculates tyre slip by the relationship between Tyre RPS and Car Speed and p
 It is working for Project CARS2 and Race Room Racing Experience only.
 
 ## Installation
-Put the DLL file Viper.PluginCalcRotWheelSlip.dll into the SimHub folder parallel to the SimHubWPF.exe and start SimHub.\
+Put the DLL file Viper.PluginCalcRotTyreSlip.dll into the SimHub folder parallel to the SimHubWPF.exe and start SimHub.\
 SimHub detects the new plugin, confirm the question for enabling.\
 If SimHub does not start, please check the log files in the "Logs" folder.
-If you go to Settings -> Plugins tab now you should see the new plugin.\
+If you go to Settings -> Plugins tab now you should see the new plugin.
 
 <img src="docs/Plugins_View.jpg" width="70%" height="70%">
 
