@@ -9,7 +9,7 @@ using SimHub;   // Needed for Logging
 
 namespace Viper.PluginCalcRotWheelSlip
 {
-    [PluginName("Calculate Rotational Tyre Slip 0.1")]
+    [PluginName("Calculate Rotational Tyre Slip 1.0")]
     [PluginDescrition("Calculates Tyre Slip by the relationship between Tyre RPS and Car Speed. Perfect for analyzing your Throttle and Brake input and TC/ABS settings\nFor Project CARS 2 and R3E only")]
     [PluginAuthor("Viper")]
     
@@ -150,7 +150,7 @@ namespace Viper.PluginCalcRotWheelSlip
                             }
                             else
                             {
-                                // below 0.5 m/s show an imaginery Slip value defined by TyreRPS directly
+                                // below 0.5 m/s show tyre slip directly, because division by speed generates to high values. Use divisor 10 to bring it better in the range between 0 and -1
                                 RotTyreSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / 10;
 
                                 if (Speedms > 0.4) { }  // For Debugging only
