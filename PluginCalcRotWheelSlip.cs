@@ -3,8 +3,9 @@ using SimHub.Plugins;
 using System;
 using System.Windows.Forms;
 using System.Windows.Controls;
-using Newtonsoft.Json.Linq;
-using System.IO;
+using Newtonsoft.Json.Linq; // Needed for JObject
+using System.IO;    // Need for read/write JSON settings file
+using SimHub;   // Needed for Logging
 
 namespace Viper.PluginCalcRotWheelSlip
 {
@@ -20,7 +21,6 @@ namespace Viper.PluginCalcRotWheelSlip
 
         //input variables
         private string curGame;
-        private object tmpObj;
         private double VelocityX = 0;
         private float Speedms = 0;
         private float[] TyreRPS = new float[] { 0f, 0f, 0f, 0f };
@@ -53,7 +53,6 @@ namespace Viper.PluginCalcRotWheelSlip
                     {
                         VelocityX = Math.Abs((Convert.ToDouble((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mLocalVelocity01"))));
                         Speedms = (float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mSpeed");
-                        tmpObj = pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS01");
                         TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS01"));
                         TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS02"));
                         TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS03"));
@@ -116,7 +115,7 @@ namespace Viper.PluginCalcRotWheelSlip
                         for (int i = 0; i < TyreDiameter.Length; i++)
                         {
                             //calculate over 0.01 m/s only, because the Slip results are extreme high below 0.01 (Division by Speed)
-                            if (Speedms > 0.01)
+                            if (Speedms > 0.5)
                             {
                                 /*Understanding calculation
                                  For the rotational tyre slip we need the ratio between the tyre surface speed and the car speed.
@@ -146,11 +145,15 @@ namespace Viper.PluginCalcRotWheelSlip
                                 {
                                     RotTyreSlip[i] = 0;
                                 }
+                                
+                                if (RotTyreSlip[0] < -0.1) { }  // For Debugging only
                             }
                             else
                             {
-                                // below 0.01 m/s show an imaginery Slip value defined by TyreRPS directly
-                                RotTyreSlip[i] = TyreRPS[i] / 10;
+                                // below 0.5 m/s show an imaginery Slip value defined by TyreRPS directly
+                                RotTyreSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / 10;
+
+                                if (Speedms > 0.4) { }  // For Debugging only
                             }
                             
                         }
@@ -206,14 +209,16 @@ namespace Viper.PluginCalcRotWheelSlip
                 AccData.Brake = (int)JSONdata["Brake_max"];
                 AccData.Throttle = (int)JSONdata["Throttle_max"];
                 AccData.Vel = (double)JSONdata["VelX_max"];
+                Logging.Current.Info("Plugin Viper.PluginCalcRotWheelSlip - Settings file " + System.Environment.CurrentDirectory + "\\" + AccData.path + " loaded.");
             }
-            // if there is no settings file, use the defaults
+            // if there is no settings file, use the following defaults
             catch
             {
                 AccData.Speed = 20;
                 AccData.Brake = 0;
-                AccData.Throttle = 0;
-                AccData.Vel = 0.004;
+                AccData.Throttle = 5;
+                AccData.Vel = 0.002;
+                Logging.Current.Info("Plugin Viper.PluginCalcRotWheelSlip - Default settings loaded.");
             }
             
             

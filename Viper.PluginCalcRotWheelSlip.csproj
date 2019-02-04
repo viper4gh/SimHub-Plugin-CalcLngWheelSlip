@@ -34,6 +34,14 @@
     <Reference Include="GameReaderCommon">
       <HintPath>..\..\..\SimHub\GameReaderCommon.dll</HintPath>
     </Reference>
+    <Reference Include="InputManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\InputManager.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\MahApps.Metro.dll</HintPath>
@@ -44,6 +52,10 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="SimHub.Logging, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SimHub.Logging.dll</HintPath>
+    </Reference>
     <Reference Include="SimHub.Plugins">
       <HintPath>..\..\..\SimHub\SimHub.Plugins.dll</HintPath>
     </Reference>
@@ -71,6 +83,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Properties\DesignTimeResources.xaml"  Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+	     <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+    </Page>
     <Page Include="SettingsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -12,8 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Newtonsoft.Json.Linq;
-using System.IO;
+using Newtonsoft.Json.Linq; // Needed for JObject 
+using System.IO;    // Needed for read/write JSON settings file
+using SimHub;   // Needed for Logging
 
 namespace Viper.PluginCalcRotWheelSlip
 {
@@ -92,11 +93,15 @@ namespace Viper.PluginCalcRotWheelSlip
                     {
                         // create/write settings file
                         File.WriteAllText(@AccData.path, JSONdata.ToString());
+                        Logging.Current.Info("Plugin Viper.PluginCalcRotWheelSlip - Settings file saved: " + System.Environment.CurrentDirectory + "\\" + AccData.path);
                     }
                     catch
                     {
                         //A MessageBox creates graphical glitches after closing it. Search another way, maybe using the Standard Log in SimHub\Logs
                         //MessageBox.Show("Cannot create or write the following file: \n" + System.Environment.CurrentDirectory + "\\" + AccData.path, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        Logging.Current.Error("Plugin Viper.PluginCalcRotWheelSlip - Cannot create or write settings file: " + System.Environment.CurrentDirectory + "\\" + AccData.path);
+
+
                     }
                     value_changed = false;
                 }
@@ -106,7 +111,7 @@ namespace Viper.PluginCalcRotWheelSlip
         }
     }
 
-    //public class for exchanging the data with the main cs file
+    //public class for exchanging the data with the main cs file (Init and DataUpdate function)
     public class AccData
     {
         public static int Speed { get; set; }
@@ -116,7 +121,7 @@ namespace Viper.PluginCalcRotWheelSlip
         public static string path { get; set; }
     }
 
-    /*public class AccSpeed
+    /*public class AccSpeed - old way
     {*/
         /*private static int Speed = 20;
         public static int Value
