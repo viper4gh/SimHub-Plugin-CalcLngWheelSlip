@@ -83,15 +83,25 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Properties\DesignTimeResources.xaml"  Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
+    <Page Include="Properties\DesignTimeResources.xaml" Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-	     <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
+      <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
     </Page>
     <Page Include="SettingsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="docs\Control_Actions.jpg" />
+    <Content Include="docs\Dash_Debug_Lock.jpg" />
+    <Content Include="docs\Dash_Main_Lock.jpg" />
+    <Content Include="docs\Dash_Main_Spin.jpg" />
+    <Content Include="docs\Plugins_View.jpg" />
+    <Content Include="docs\Plugin_settings_view.jpg" />
+    <Content Include="docs\Properties.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

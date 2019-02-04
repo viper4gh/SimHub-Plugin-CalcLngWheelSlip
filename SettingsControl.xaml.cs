@@ -93,7 +93,7 @@ namespace Viper.PluginCalcRotWheelSlip
                     {
                         // create/write settings file
                         File.WriteAllText(@AccData.path, JSONdata.ToString());
-                        Logging.Current.Info("Plugin Viper.PluginCalcRotWheelSlip - Settings file saved: " + System.Environment.CurrentDirectory + "\\" + AccData.path);
+                        Logging.Current.Info("Plugin Viper.PluginCalcRotWheelSlip - Settings file saved to : " + System.Environment.CurrentDirectory + "\\" + AccData.path);
                     }
                     catch
                     {

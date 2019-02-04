@@ -217,7 +217,7 @@ namespace Viper.PluginCalcRotWheelSlip
                 AccData.Speed = 20;
                 AccData.Brake = 0;
                 AccData.Throttle = 5;
-                AccData.Vel = 0.002;
+                AccData.Vel = 0.001;
                 Logging.Current.Info("Plugin Viper.PluginCalcRotWheelSlip - Default settings loaded.");
             }
             
