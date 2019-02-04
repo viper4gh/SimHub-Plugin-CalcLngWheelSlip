@@ -16,7 +16,7 @@ using Newtonsoft.Json.Linq; // Needed for JObject
 using System.IO;    // Needed for read/write JSON settings file
 using SimHub;   // Needed for Logging
 
-namespace Viper.PluginCalcRotWheelSlip
+namespace Viper.PluginCalcRotTyreSlip
 {
     /// <summary>
     /// Logique d'interaction pour SettingsControlDemo.xaml
@@ -93,13 +93,13 @@ namespace Viper.PluginCalcRotWheelSlip
                     {
                         // create/write settings file
                         File.WriteAllText(@AccData.path, JSONdata.ToString());
-                        Logging.Current.Info("Plugin Viper.PluginCalcRotWheelSlip - Settings file saved to : " + System.Environment.CurrentDirectory + "\\" + AccData.path);
+                        Logging.Current.Info("Plugin Viper.PluginCalcRotTyreSlip - Settings file saved to : " + System.Environment.CurrentDirectory + "\\" + AccData.path);
                     }
                     catch
                     {
                         //A MessageBox creates graphical glitches after closing it. Search another way, maybe using the Standard Log in SimHub\Logs
                         //MessageBox.Show("Cannot create or write the following file: \n" + System.Environment.CurrentDirectory + "\\" + AccData.path, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        Logging.Current.Error("Plugin Viper.PluginCalcRotWheelSlip - Cannot create or write settings file: " + System.Environment.CurrentDirectory + "\\" + AccData.path);
+                        Logging.Current.Error("Plugin Viper.PluginCalcRotTyreSlip - Cannot create or write settings file: " + System.Environment.CurrentDirectory + "\\" + AccData.path);
 
 
                     }

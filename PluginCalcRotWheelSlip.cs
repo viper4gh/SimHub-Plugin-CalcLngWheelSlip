@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq; // Needed for JObject
 using System.IO;    // Need for read/write JSON settings file
 using SimHub;   // Needed for Logging
 
-namespace Viper.PluginCalcRotWheelSlip
+namespace Viper.PluginCalcRotTyreSlip
 {
     [PluginName("Calculate Rotational Tyre Slip 1.0")]
     [PluginDescrition("Calculates Tyre Slip by the relationship between Tyre RPS and Car Speed. Perfect for analyzing your Throttle and Brake input and TC/ABS settings\nFor Project CARS 2 and R3E only")]
@@ -76,15 +76,15 @@ namespace Viper.PluginCalcRotWheelSlip
                     {
                         TyreDiameterCalculated = false;
                         reset = false;
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.TyreDiameterComputed", this.GetType(), false);
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_FL", this.GetType(), "-");
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_FR", this.GetType(), "-");
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_RL", this.GetType(), "-");
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_RR", this.GetType(), "-");
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_FL", this.GetType(), 0);
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_FR", this.GetType(), 0);
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RL", this.GetType(), 0);
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RR", this.GetType(), 0);
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.TyreDiameterComputed", this.GetType(), false);
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.TyreDiameter_FL", this.GetType(), "-");
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.TyreDiameter_FR", this.GetType(), "-");
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.TyreDiameter_RL", this.GetType(), "-");
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.TyreDiameter_RR", this.GetType(), "-");
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.RotTyreSlip_FL", this.GetType(), 0);
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.RotTyreSlip_FR", this.GetType(), 0);
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.RotTyreSlip_RL", this.GetType(), 0);
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.RotTyreSlip_RR", this.GetType(), 0);
                     }
                     
                     // calculate Tyre Diameter automatic (Speed > 20 km/h, Brake and Throttle = 0) or on manual Override 
@@ -99,14 +99,14 @@ namespace Viper.PluginCalcRotWheelSlip
                                 TyreDiameter[i] = Speedms / TyreRPS[i] * 2;
                             }
                         }
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_FL", this.GetType(), TyreDiameter[0]);
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_FR", this.GetType(), TyreDiameter[1]);
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_RL", this.GetType(), TyreDiameter[2]);
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.TyreDiameter_RR", this.GetType(), TyreDiameter[3]);
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.TyreDiameter_FL", this.GetType(), TyreDiameter[0]);
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.TyreDiameter_FR", this.GetType(), TyreDiameter[1]);
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.TyreDiameter_RL", this.GetType(), TyreDiameter[2]);
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.TyreDiameter_RR", this.GetType(), TyreDiameter[3]);
 
                         TyreDiameterCalculated = true;
                         manualOverride = false;
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.TyreDiameterComputed", this.GetType(), true);
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.TyreDiameterComputed", this.GetType(), true);
                     }
 
                     // calculate Tyre Lock / Spin
@@ -157,10 +157,10 @@ namespace Viper.PluginCalcRotWheelSlip
                             }
                             
                         }
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_FL", this.GetType(), RotTyreSlip[0]);
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_FR", this.GetType(), RotTyreSlip[1]);
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RL", this.GetType(), RotTyreSlip[2]);
-                        pluginManager.SetPropertyValue("CalcRotWheelSlip.Computed.RotTyreSlip_RR", this.GetType(), RotTyreSlip[3]);
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.RotTyreSlip_FL", this.GetType(), RotTyreSlip[0]);
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.RotTyreSlip_FR", this.GetType(), RotTyreSlip[1]);
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.RotTyreSlip_RL", this.GetType(), RotTyreSlip[2]);
+                        pluginManager.SetPropertyValue("CalcRotTyreSlip.Computed.RotTyreSlip_RR", this.GetType(), RotTyreSlip[3]);
                     }
                 }
 
@@ -199,7 +199,7 @@ namespace Viper.PluginCalcRotWheelSlip
         public void Init(PluginManager pluginManager)
         {
             // set path/filename for settings file
-            AccData.path = PluginManager.GetCommonStoragePath("Viper.PluginCalcRotWheelSlip.json");
+            AccData.path = PluginManager.GetCommonStoragePath("Viper.PluginCalcRotTyreSlip.json");
             
             // try to read settings file
             try
@@ -209,7 +209,7 @@ namespace Viper.PluginCalcRotWheelSlip
                 AccData.Brake = (int)JSONdata["Brake_max"];
                 AccData.Throttle = (int)JSONdata["Throttle_max"];
                 AccData.Vel = (double)JSONdata["VelX_max"];
-                Logging.Current.Info("Plugin Viper.PluginCalcRotWheelSlip - Settings file " + System.Environment.CurrentDirectory + "\\" + AccData.path + " loaded.");
+                Logging.Current.Info("Plugin Viper.PluginCalcRotTyreSlip - Settings file " + System.Environment.CurrentDirectory + "\\" + AccData.path + " loaded.");
             }
             // if there is no settings file, use the following defaults
             catch
@@ -218,28 +218,28 @@ namespace Viper.PluginCalcRotWheelSlip
                 AccData.Brake = 0;
                 AccData.Throttle = 5;
                 AccData.Vel = 0.001;
-                Logging.Current.Info("Plugin Viper.PluginCalcRotWheelSlip - Default settings loaded.");
+                Logging.Current.Info("Plugin Viper.PluginCalcRotTyreSlip - Default settings loaded.");
             }
             
             
-            pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_FL", this.GetType(), 0);
-            pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_FR", this.GetType(), 0);
-            pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_RL", this.GetType(), 0);
-            pluginManager.AddProperty("CalcRotWheelSlip.Computed.RotTyreSlip_RR", this.GetType(), 0);
+            pluginManager.AddProperty("CalcRotTyreSlip.Computed.RotTyreSlip_FL", this.GetType(), 0);
+            pluginManager.AddProperty("CalcRotTyreSlip.Computed.RotTyreSlip_FR", this.GetType(), 0);
+            pluginManager.AddProperty("CalcRotTyreSlip.Computed.RotTyreSlip_RL", this.GetType(), 0);
+            pluginManager.AddProperty("CalcRotTyreSlip.Computed.RotTyreSlip_RR", this.GetType(), 0);
 
-            pluginManager.AddProperty("CalcRotWheelSlip.Computed.TyreDiameter_FL", this.GetType(), "-");
-            pluginManager.AddProperty("CalcRotWheelSlip.Computed.TyreDiameter_FR", this.GetType(), "-");
-            pluginManager.AddProperty("CalcRotWheelSlip.Computed.TyreDiameter_RL", this.GetType(), "-");
-            pluginManager.AddProperty("CalcRotWheelSlip.Computed.TyreDiameter_RR", this.GetType(), "-");
+            pluginManager.AddProperty("CalcRotTyreSlip.Computed.TyreDiameter_FL", this.GetType(), "-");
+            pluginManager.AddProperty("CalcRotTyreSlip.Computed.TyreDiameter_FR", this.GetType(), "-");
+            pluginManager.AddProperty("CalcRotTyreSlip.Computed.TyreDiameter_RL", this.GetType(), "-");
+            pluginManager.AddProperty("CalcRotTyreSlip.Computed.TyreDiameter_RR", this.GetType(), "-");
 
-            pluginManager.AddProperty("CalcRotWheelSlip.TyreDiameterComputed", this.GetType(), false);
+            pluginManager.AddProperty("CalcRotTyreSlip.TyreDiameterComputed", this.GetType(), false);
 
-            pluginManager.AddAction("CalcRotWheelSlip.CalcTyreDiameter", this.GetType(), (a, b) =>
+            pluginManager.AddAction("CalcRotTyreSlip.CalcTyreDiameter", this.GetType(), (a, b) =>
             {
                 this.manualOverride = true;
             });
             
-            pluginManager.AddAction("CalcRotWheelSlip.ResetTyreDiameter", this.GetType(), (a, b) =>
+            pluginManager.AddAction("CalcRotTyreSlip.ResetTyreDiameter", this.GetType(), (a, b) =>
             {
                 this.reset = true;
             });

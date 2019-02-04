@@ -3,8 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:local="clr-namespace:Viper.PluginCalcRotWheelSlip"
-    xmlns:styles="clr-namespace:SimHub.Plugins.Styles;assembly=SimHub.Plugins" xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls" x:Class="Viper.PluginCalcRotWheelSlip.SettingsControl"
+    xmlns:local="clr-namespace:Viper.PluginCalcRotTyreSlip"
+    xmlns:styles="clr-namespace:SimHub.Plugins.Styles;assembly=SimHub.Plugins" xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls" x:Class="Viper.PluginCalcRotTyreSlip.SettingsControl"
     mc:Ignorable="d" 
     d:DesignHeight="650" d:DesignWidth="400">
     <Grid>
@@ -37,7 +37,7 @@
                     <Custom:NumericUpDown x:Name="Vel" Margin="38,11,38,12" Grid.Column="1" Grid.Row="3" ValueChanged="Vel_ValueChanged" Interval="0.0001" Minimum="0.0001" Maximum="0.0099"/>
                 </Grid>
                 <TextBlock TextWrapping="Wrap" Text="Plugin Description" FontWeight="Bold" Margin="0,0,0,5"/>
-                <TextBlock Height="196" TextWrapping="Wrap" Text="This plugin first calculates your car's tyre diameters by using the Tyre RPS and Car Speed. &#xA;These values are saved and then used to calculate the rotational Tyre Slips.&#xA;+1.0 = 100% Tyre Lock&#xA;   0 = no Tyre Slip&#xA;-1.0 = 100% Tyre Spin = The tyre rotates at least twice the speed of the corresponding vehicle speed.&#xA;All the new values are available as properties CalcRotWheelSlip.*&#xA;Further there are 2 new controller actions available for manual overriding the tyre diameter detection and to reset the automatic detection (named CalcRotWheelSlip.*)" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}"/>
+                <TextBlock Height="196" TextWrapping="Wrap" Text="This plugin first calculates your car's tyre diameters by using the Tyre RPS and Car Speed. &#xA;These values are saved and then used to calculate the rotational Tyre Slips.&#xA;+1.0 = 100% Tyre Lock&#xA;   0 = no Tyre Slip&#xA;-1.0 = 100% Tyre Spin = The tyre rotates at least twice the speed of the corresponding vehicle speed.&#xA;All the new values are available as properties CalcRotTyreSlip.*&#xA;Further there are 2 new controller actions available for manual overriding the tyre diameter detection and to reset the automatic detection (named CalcRotTyreSlip.*)" Foreground="{DynamicResource BlackBrush}" Background="{x:Null}"/>
                 
 
             </StackPanel>

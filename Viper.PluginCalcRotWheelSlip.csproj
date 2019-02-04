@@ -7,8 +7,8 @@
     <ProjectGuid>{833040C9-FE5E-4CCF-B21D-71979E049B6B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Viper.PluginCalcRotWheelSlip</RootNamespace>
-    <AssemblyName>Viper.PluginCalcRotWheelSlip</AssemblyName>
+    <RootNamespace>Viper.PluginCalcRotTyreSlip</RootNamespace>
+    <AssemblyName>Viper.PluginCalcRotTyreSlip</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
