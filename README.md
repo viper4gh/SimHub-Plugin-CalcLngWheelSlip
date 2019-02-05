@@ -46,7 +46,7 @@ There are further two new actions:
 
 <img src="docs/Control_Actions.jpg" width="70%" height="70%">
 
-### Demo Dash
+## Demo Dash
 For illustration purposes I added a Demo Dash to the Release.\
 Simple double click on the file "Lock and Spin of Wheels.simhubdash" and SimHub will ask for the import process.\
 The Dash has two screens, a main screen and a debug screen with a bit more information.\
