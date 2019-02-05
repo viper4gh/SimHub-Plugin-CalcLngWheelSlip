@@ -4,7 +4,7 @@ This is a plugin for [SimHub](http://www.simhubdash.com/)
 It calculates wheel slip by the relationship between Tyre RPS and Car Speed and provides the result as new properties.\
 It is working for **Project CARS2** and **Race Room Racing Experience only**.
 
-## Installation
+### Installation
 Put the DLL file Viper.PluginCalcLngWheelSlip.dll into the SimHub folder parallel to the SimHubWPF.exe and start SimHub.\
 SimHub detects the new plugin, confirm the question for enabling.\
 If SimHub does not start, please check the log files in the "Logs" folder.\
