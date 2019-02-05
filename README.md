@@ -35,8 +35,8 @@ The plugin provides new properties and actions.\
 The new properties provide the calculated diameter(m) and the longitudinal slip value of every wheel.\
 The slip value can be understood as follows:
 -  0 = no slip, the tyre surface speed is the same as the car speed
--  1 = 100% wheel lock, the tyre surface speed is 0 and the car still moving
-- -1 = 100% wheel spin, the tyre surface speed is at least twice that of the car speed. The value can be lower than -1.
+-  1.0 = 100% wheel lock, the tyre surface speed is 0 and the car still moving
+- -1.0 = 100% wheel spin, the tyre surface speed is twice that of the car speed. The value can be lower than -1.0.
 
 <img src="docs/Properties.jpg" width="70%" height="70%">
 
