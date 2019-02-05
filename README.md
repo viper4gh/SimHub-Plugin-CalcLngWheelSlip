@@ -2,7 +2,7 @@
 This is a plugin for [SimHub](http://www.simhubdash.com/)
 
 It calculates tyre slip by the relationship between Tyre RPS and Car Speed and provides the result as new properties.\
-It is working for Project CARS2 and Race Room Racing Experience only.
+It is working for **Project CARS2** and **Race Room Racing Experience only**.
 
 ## Installation
 Put the DLL file Viper.PluginCalcRotTyreSlip.dll into the SimHub folder parallel to the SimHubWPF.exe and start SimHub.\
@@ -40,7 +40,7 @@ The slip value can be understood as follows:
 
 <img src="docs/Properties.jpg" width="70%" height="70%">
 
-There are further to new actions:
+There are further two new actions:
 - CalcTyreDiameter - manual trigger the tyre diameter calculation, the detection limits are ignored
 - ResetTyreDiameter - reset the tyre diameter, the automatic detection begins again
 
