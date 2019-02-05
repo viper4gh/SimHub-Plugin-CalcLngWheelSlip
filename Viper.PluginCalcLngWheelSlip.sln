@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Viper.PluginCalcRotTyreSlip", "Viper.PluginCalcRotTyreSlip.csproj", "{833040C9-FE5E-4CCF-B21D-71979E049B6B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Viper.PluginCalcLngWheelSlip", "Viper.PluginCalcLngWheelSlip.csproj", "{833040C9-FE5E-4CCF-B21D-71979E049B6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +20,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {2104CD86-C39E-433F-9208-3ADCDE01CE90}
+		SolutionGuid = {539672D8-CB39-4FB6-82B1-250D989FD45B}
 	EndGlobalSection
 EndGlobal
