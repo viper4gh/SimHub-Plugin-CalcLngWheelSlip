@@ -7,7 +7,7 @@ It is working for **Project CARS2** and **Race Room Racing Experience only**.
 ## Installation
 Put the DLL file Viper.PluginCalcLngWheelSlip.dll into the SimHub folder parallel to the SimHubWPF.exe and start SimHub.\
 SimHub detects the new plugin, confirm the question for enabling.\
-If SimHub does not start, please check the log files in the "Logs" folder.
+If SimHub does not start, please check the log files in the "Logs" folder.\
 If you go to Settings -> Plugins tab now you should see the new plugin.
 
 <img src="docs/Plugins_View.jpg" width="70%" height="70%">
