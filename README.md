@@ -55,6 +55,10 @@ At the bottom you can see how the tyre diameter detection works. There are 4 sma
 As long as the rectangle stays red the rotation wheel calculation does not work an the color of the 4 wheels stay black.\
 Further the rectangle shows the calculated tyre diameter(cm) in the 4 edges.
 
+Demo Video\
+[![](http://img.youtube.com/vi/O0L-ojRhpx4/0.jpg)](http://www.youtube.com/watch?v=O0L-ojRhpx4 "Dash")
+
+Screenshots\
 <img src="docs/Dash_Main_Lock.jpg" width="70%" height="70%">
 
 <img src="docs/Dash_Main_Spin.jpg" width="70%" height="70%">
