@@ -45,3 +45,18 @@ There are further two new actions:
 - ResetTyreDiameter - reset the tyre diameter, the automatic detection begins again
 
 <img src="docs/Control_Actions.jpg" width="70%" height="70%">
+
+### Demo Dash
+For illustration purposes I added a Demo Dash to the Release.\
+Simple double click on the file "Lock and Spin of Wheels.simhubdash" and SimHub will ask for the import process.\
+The Dash has two screens, a main screen and a debug screen, which has some more information.\
+You can see the the 4 wheels and they will change the color depending on the calculated spin (blue) and lock (red) value.\
+At the bottom you can see how the tyre diameter detection works. There are 4 small squares showing the 4 limits, green = within the limit, red = outside the limit (The limit values were taken over manually from the plugin. If you change them in the plugin, you have to change it in the Dash, too.). At the first moment when all 4 squares are green at the same time the tyre diameter calculation is triggered and the bigger rectangle in the middle turns green.\
+As long as the rectangle stays red the rotation wheel calculation does not work an the color of the 4 wheels stay black.\
+Further the rectangle shows the calculated tyre diameter(cm) in the 4 edges.
+
+<img src="docs/Dash_Main_Lock.jpg" width="70%" height="70%">
+
+<img src="docs/Dash_Main_Spin.jpg" width="70%" height="70%">
+
+<img src="docs/Dash_Debug_Lock.jpg" width="70%" height="70%">
