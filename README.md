@@ -52,7 +52,7 @@ Simple double click on the file "Lock and Spin of Wheels.simhubdash" and SimHub 
 The Dash has two screens, a main screen and a debug screen with a bit more information.\
 You can see the 4 wheels and they will change the color depending on the calculated spin (blue) and lock (red) value.\
 At the bottom you can see how the tyre diameter detection works. There are 4 small squares showing the 4 limits, green = within the limit, red = outside the limit (The limit values were taken over manually from the plugin. If you change them in the plugin, you have to change it in the Dash, too). At the first moment when all 4 squares are green at the same time the tyre diameter calculation is triggered and the larger rectangle in the middle turns green.\
-As long as the larger rectangle is red, the calculation of the rotation wheel does not work and the color of the 4 wheels remains black.\
+As long as the larger rectangle is red, the calculation of the wheel slip does not work and the color of the 4 wheels remains black.\
 Further the rectangle shows the calculated tyre diameter(cm) in the 4 edges.
 
 Demo Video (Acura NSX GT3 @ Mugello Short with ABS)\
