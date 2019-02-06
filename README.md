@@ -1,8 +1,10 @@
 # SimHub-Plugin: Calculate Longitudinal Wheel Slip
 This is a plugin for [SimHub](http://www.simhubdash.com/)
 
-It calculates wheel slip by the relationship between Tyre RPS and Car Speed and provides the result as new properties.\
-It is working for **Project CARS2** and **Race Room Racing Experience only** at the moment.
+It calculates the longitudinal (in driving direction) wheel slip by the relationship between Tyre RPS and Car Speed, and provides the result as new properties.\
+You can use these new properties to visualize lock and spin of wheels via a Dash for example, which can help to improve your brake and throttle input or optimize the ABS/TC settings.
+In some cases the game API brings a Wheel Slip value directly with, but the difference is that this value is used for longitudinal and lateral (sideways) direction.\
+The plugin is working for **Project CARS2** and **Race Room Racing Experience** only at the moment. Other games WIP.
 
 ### Installation
 Put the DLL file Viper.PluginCalcLngWheelSlip.dll into the SimHub folder parallel to the SimHubWPF.exe and start SimHub.\
