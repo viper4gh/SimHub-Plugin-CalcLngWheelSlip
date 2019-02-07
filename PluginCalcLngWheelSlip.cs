@@ -45,7 +45,7 @@ namespace Viper.PluginCalcLngWheelSlip
 
             if (data.GameRunning)
             {
-                if (data.OldData != null && data.NewData != null && (curGame == "PCars2" || curGame == "RRRE" || curGame == "RFactor2" || curGame == "RFactor2Spectator" || curGame == "AssettoCorsa" || curGame == "AssettoCorsaCompetizione"/*|| curGame == "???"  -add other games here*/))   //TODO: check a record where the game was captured from startup on
+                if (data.OldData != null && data.NewData != null && (curGame == "PCars2" || curGame == "PCars" || curGame == "RRRE" || curGame == "RFactor2" || curGame == "RFactor2Spectator" || curGame == "AssettoCorsa" || curGame == "AssettoCorsaCompetizione" || curGame == "F12018"/* || curGame == "???"  -add other games here*/))   //TODO: check a record where the game was captured from startup on
                 {
                     // Determine Speed in m/s - cast from object to double and then to float
                     Speedms = (float)((double)pluginManager.GetPropertyValue("DataCorePlugin.GameData.NewData.SpeedKmh") / 3.6);
@@ -55,6 +55,7 @@ namespace Viper.PluginCalcLngWheelSlip
                     switch (curGame)
                     {
                         case "PCars2":
+                        case "PCars":
                             VelocityX = Math.Abs(((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mLocalVelocity01")));
                             TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS01"));
                             TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS02"));
@@ -84,6 +85,13 @@ namespace Viper.PluginCalcLngWheelSlip
                             TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.Physics.WheelAngularSpeed02"));
                             TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.Physics.WheelAngularSpeed03"));
                             TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.Physics.WheelAngularSpeed04"));
+                            break;
+                        case "F12018":
+                            VelocityX = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_localVelocityX"));
+                            TyreRPS[0] = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed01"));
+                            TyreRPS[1] = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed02"));
+                            TyreRPS[2] = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed03"));
+                            TyreRPS[3] = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed04"));
                             break;
                         /*
                         case "???":
