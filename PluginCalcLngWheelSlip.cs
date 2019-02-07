@@ -27,7 +27,7 @@ namespace Viper.PluginCalcLngWheelSlip
 
         //output variables
         private float[] TyreDiameter = new float[] { 0f, 0f, 0f, 0f };   // in meter - FL,FR,RL,RR
-        private float[] LngWheelSlip = new float[] { 0f, 0f, 0f, 0f }; // Rotational Wheel Slip values FL,FR,RL,RR
+        private float[] LngWheelSlip = new float[] { 0f, 0f, 0f, 0f }; // Longitudinal Wheel Slip values FL,FR,RL,RR
 
         /// <summary>
         /// Instance of the current plugin manager
@@ -45,7 +45,7 @@ namespace Viper.PluginCalcLngWheelSlip
 
             if (data.GameRunning)
             {
-                if (data.OldData != null && data.NewData != null && (curGame == "PCars2" || curGame == "RRRE" || curGame == "AssettoCorsa" || curGame == "AssettoCorsaCompetizione"/*|| curGame == "RFactor2" || curGame == "RFactor2Spectator" *//*|| curGame == "???"  -add other games here*/))   //TODO: check a record where the game was captured from startup on
+                if (data.OldData != null && data.NewData != null && (curGame == "PCars2" || curGame == "RRRE" || curGame == "RFactor2" || curGame == "RFactor2Spectator" || curGame == "AssettoCorsa" || curGame == "AssettoCorsaCompetizione"/*|| curGame == "???"  -add other games here*/))   //TODO: check a record where the game was captured from startup on
                 {
                     // Determine Speed in m/s - cast from object to double and then to float
                     Speedms = (float)((double)pluginManager.GetPropertyValue("DataCorePlugin.GameData.NewData.SpeedKmh") / 3.6);
@@ -70,11 +70,11 @@ namespace Viper.PluginCalcLngWheelSlip
                             break;
                         case "RFactor2":
                         case "RFactor2Spectator":
-                            VelocityX = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.CurrentPlayer.mLocalVel.x"));
-                            TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.CurrentPlayerTelemetry.mWheels01.mRotation"));
-                            TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.CurrentPlayerTelemetry.mWheels02.mRotation"));
-                            TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.CurrentPlayerTelemetry.mWheels03.mRotation"));
-                            TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.CurrentPlayerTelemetry.mWheels04.mRotation"));
+                            VelocityX = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.CurrentPlayer.mLocalVel.x"));
+                            TyreRPS[0] = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.CurrentPlayerTelemetry.mWheels01.mRotation"));
+                            TyreRPS[1] = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.CurrentPlayerTelemetry.mWheels02.mRotation"));
+                            TyreRPS[2] = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.CurrentPlayerTelemetry.mWheels03.mRotation"));
+                            TyreRPS[3] = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.CurrentPlayerTelemetry.mWheels04.mRotation"));
                             break;
                         case "AssettoCorsa":
                         case "AssettoCorsaCompetizione":
@@ -90,8 +90,6 @@ namespace Viper.PluginCalcLngWheelSlip
                             // add other game
                             break;
                         */
-                        default:
-                            break;
                     }
                     // END mapping
                     //////////////////////////////////////////////
@@ -143,7 +141,7 @@ namespace Viper.PluginCalcLngWheelSlip
                             if (Speedms > 0.5)
                             {
                                 /*Understanding calculation
-                                 For the rotational wheel slip we need the ratio between the tyre surface speed and the car speed.
+                                 For the longitudinal wheel slip we need the ratio between the tyre surface speed and the car speed.
                                  Car speed is directly available, but the tyre surface speed must be calculated.
                                     tyre surface speed(m/s) = tyre diameter(m) * Pi * tyre revolutions per second
                                  The games provide TyreRPS, but it is in radiants per second, you have to calculate the revolutions per second first.
