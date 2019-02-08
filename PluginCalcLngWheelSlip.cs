@@ -41,7 +41,8 @@ namespace Viper.PluginCalcLngWheelSlip
         /// <param name="data"></param>
         public void DataUpdate(PluginManager pluginManager, ref GameData data)
         {
-            curGame = pluginManager.GetPropertyValue("DataCorePlugin.CurrentGame").ToString();
+            //curGame = pluginManager.GetPropertyValue("DataCorePlugin.CurrentGame").ToString();
+            curGame = data.GameName;
 
             if (data.GameRunning)
             {
@@ -87,11 +88,12 @@ namespace Viper.PluginCalcLngWheelSlip
                             TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.Physics.WheelAngularSpeed04"));
                             break;
                         case "F12018":
-                            VelocityX = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_localVelocityX"));
-                            TyreRPS[0] = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed01"));
-                            TyreRPS[1] = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed02"));
-                            TyreRPS[2] = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed03"));
-                            TyreRPS[3] = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed04"));
+                            VelocityX = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_localVelocityX"));
+                            // F1 2018 provides tyre surface speed directly - TODO: check wheel ordering again
+                            TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed03"));
+                            TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed04"));
+                            TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed01"));
+                            TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed02"));
                             break;
                         /*
                         case "???":
@@ -117,31 +119,35 @@ namespace Viper.PluginCalcLngWheelSlip
                         pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.LngWheelSlip_RL", this.GetType(), 0);
                         pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.LngWheelSlip_RR", this.GetType(), 0);
                     }
-                    
-                    // calculate Tyre Diameter automatic (Speed > 20 km/h, Brake and Throttle = 0) or on manual Override 
-                    // The if statement is for finding a moment when the wheel slip is nearly 0, because only then the car speed = tyre surface speed and the only then the tyre diameter calculation is correct
-                    if ((data.NewData.SpeedKmh > AccData.Speed && data.NewData.Brake <= AccData.Brake && data.NewData.Throttle <= AccData.Throttle && (VelocityX/Speedms) < AccData.Vel && TyreDiameterCalculated == false) || manualOverride == true)
-                    {
-                        //calculate tyre diameters
-                        for (int i = 0; i < TyreRPS.Length; i++)
-                        {
-                            if(TyreRPS[i] != 0)
-                            {
-                                TyreDiameter[i] = Speedms / TyreRPS[i] * 2;
-                            }
-                        }
-                        pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_FL", this.GetType(), TyreDiameter[0]);
-                        pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_FR", this.GetType(), TyreDiameter[1]);
-                        pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RL", this.GetType(), TyreDiameter[2]);
-                        pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RR", this.GetType(), TyreDiameter[3]);
 
-                        TyreDiameterCalculated = true;
-                        manualOverride = false;
-                        pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterComputed", this.GetType(), true);
+                    // F1 2018 needs no tyre diameter calculation, because the Tyre RPS values provide the tyre surface speed already. In this case it is also not possible to calculate the tyre diameter.
+                    if (curGame != "F12018")
+                    {
+                        // calculate Tyre Diameter automatic (Speed > 20 km/h, Brake and Throttle = 0) or on manual Override 
+                        // The if statement is for finding a moment when the wheel slip is nearly 0, because only then the car speed = tyre surface speed and the only then the tyre diameter calculation is correct
+                        if ((data.NewData.SpeedKmh > AccData.Speed && data.NewData.Brake <= AccData.Brake && data.NewData.Throttle <= AccData.Throttle && (VelocityX / Speedms) < AccData.Vel && TyreDiameterCalculated == false) || manualOverride == true)
+                        {
+                            //calculate tyre diameters
+                            for (int i = 0; i < TyreRPS.Length; i++)
+                            {
+                                if (TyreRPS[i] != 0)
+                                {
+                                    TyreDiameter[i] = Speedms / TyreRPS[i] * 2;
+                                }
+                            }
+                            pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_FL", this.GetType(), TyreDiameter[0]);
+                            pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_FR", this.GetType(), TyreDiameter[1]);
+                            pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RL", this.GetType(), TyreDiameter[2]);
+                            pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RR", this.GetType(), TyreDiameter[3]);
+
+                            TyreDiameterCalculated = true;
+                            manualOverride = false;
+                            pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterComputed", this.GetType(), true);
+                        }
                     }
 
                     // calculate Wheel Lock / Spin
-                    if (TyreDiameterCalculated == true)
+                    if (TyreDiameterCalculated == true || curGame == "F12018")
                     {
                         for (int i = 0; i < TyreDiameter.Length; i++)
                         {
@@ -170,7 +176,16 @@ namespace Viper.PluginCalcLngWheelSlip
                                     full wheel lock: (50 m/s - 0 m/s) / 50 m/s = 1
                                     wheel spins with double car speed: (50 m/s - 100 m/s) / 50 m/s = -1
                                 */
-                                LngWheelSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / Speedms;
+                                if(curGame != "F12018")
+                                {
+                                    LngWheelSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / Speedms;
+                                }
+                                else
+                                {
+                                    // F1 2018 TyreRPS = Wheel Speed directly
+                                    LngWheelSlip[i] = (Speedms - TyreRPS[i]) / Speedms;
+                                }
+                                
                                 //don't show wheel lock below 1 m/s
                                 if (LngWheelSlip[i] > 0 && Speedms < 1)
                                 {
@@ -182,7 +197,16 @@ namespace Viper.PluginCalcLngWheelSlip
                             else
                             {
                                 // below 0.5 m/s show wheel slip directly, because division by speed generates to high values. Use divisor 10 to bring it better in the range between 0 and -1
-                                LngWheelSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / 10;
+                                // 
+                                if (curGame != "F12018")
+                                {
+                                    LngWheelSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / 10;
+                                }
+                                else
+                                {
+                                    // F1 2018 TyreRPS = Wheel Speed directly
+                                    LngWheelSlip[i] = (Speedms - TyreRPS[i]) / 10;
+                                }
 
                                 if (Speedms > 0.4) { }  // For Debugging only
                             }
