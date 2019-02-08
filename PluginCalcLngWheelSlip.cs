@@ -55,6 +55,7 @@ namespace Viper.PluginCalcLngWheelSlip
                     //map raw game variables for PCars2 and RRRE
                     switch (curGame)
                     {
+                        // TyreRPS array wheel order: FL, FR, RL, RR
                         case "PCars2":
                         case "PCars":
                             VelocityX = Math.Abs(((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mLocalVelocity01")));
@@ -89,7 +90,7 @@ namespace Viper.PluginCalcLngWheelSlip
                             break;
                         case "F12018":
                             VelocityX = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_localVelocityX"));
-                            // F1 2018 provides tyre surface speed directly - TODO: check wheel ordering again
+                            // F1 2018 provides tyre surface speed directly - array wheel order from API is RL, RR, FL, FR
                             TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed03"));
                             TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed04"));
                             TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed01"));
