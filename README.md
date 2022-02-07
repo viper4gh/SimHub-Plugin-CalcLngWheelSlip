@@ -5,7 +5,8 @@ It calculates the longitudinal (in driving direction) wheel slip by the relation
 You can use these new properties to visualize lock and spin of wheels via a Dash for example, which can help to improve your brake and throttle input or optimize brake balance, ABS/TC, ARB and differential settings.\
 In some cases the game API brings a Wheel Slip value directly with, but the difference is that this value is used for longitudinal and lateral (sideways) direction.\
 The plugin is working for:
- - Project CARS 1 and 2 
+ - Project CARS 1 and 2
+ - Automobilista 2
  - Race Room Racing Experience
  - Assetto Corsa
  - Assetto Corsa Competizione
