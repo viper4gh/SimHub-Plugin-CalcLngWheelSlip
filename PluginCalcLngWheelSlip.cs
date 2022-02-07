@@ -10,7 +10,7 @@ using SimHub;   // Needed for Logging
 namespace Viper.PluginCalcLngWheelSlip
 {
     [PluginName("Calculate Longitudinal Wheel Slip")]
-    [PluginDescrition("Calculates Wheel Slip by the relationship between Tyre RPS and Car Speed. Perfect for analyzing your Throttle and Brake input and TC/ABS settings\nWorks for pCARS 1 and 2, R3E, AC, ACC, rF2 and F1 2018")]
+    [PluginDescrition("Calculates Wheel Slip by the relationship between Tyre RPS and Car Speed. Perfect for analyzing your Throttle and Brake input and TC/ABS settings\nWorks for pCARS 1 and 2, AMS2, R3E, AC, ACC, rF2 and F1 2018")]
     [PluginAuthor("Viper")]
     
     public class DataPlugin : IPlugin, IDataPlugin, IWPFSettings
