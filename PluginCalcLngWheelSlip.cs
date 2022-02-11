@@ -21,6 +21,7 @@ namespace Viper.PluginCalcLngWheelSlip
 
         //input variables
         private string curGame;
+        private string CarModel = "-";
         private float VelocityX = 0;
         private float Speedms = 0;
         private float[] TyreRPS = new float[] { 0f, 0f, 0f, 0f };
@@ -107,7 +108,8 @@ namespace Viper.PluginCalcLngWheelSlip
                     //////////////////////////////////////////////
 
                     // reset Tyre Diameter Calculation after car switch
-                    if (data.OldData.CarModel != data.NewData.CarModel || reset == true)
+                    //if (data.OldData.CarModel != data.NewData.CarModel || reset == true)  //not working correctly, on starting a session the data.OldData Object is null for a short time and the reset logic is not triggered
+                    if ((CarModel != "-" && CarModel != data.NewData.CarModel) || reset == true)
                     {
                         TyreDiameterCalculated = false;
                         reset = false;
@@ -120,6 +122,7 @@ namespace Viper.PluginCalcLngWheelSlip
                         pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.LngWheelSlip_FR", this.GetType(), 0);
                         pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.LngWheelSlip_RL", this.GetType(), 0);
                         pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.LngWheelSlip_RR", this.GetType(), 0);
+                        CarModel = "-";
                     }
 
                     // F1 2018 needs no tyre diameter calculation, because the Tyre RPS values provide the tyre surface speed already. In this case it is also not possible to calculate the tyre diameter.
@@ -142,6 +145,7 @@ namespace Viper.PluginCalcLngWheelSlip
                             pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RL", this.GetType(), TyreDiameter[2]);
                             pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RR", this.GetType(), TyreDiameter[3]);
 
+                            CarModel = data.NewData.CarModel;
                             TyreDiameterCalculated = true;
                             manualOverride = false;
                             pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterComputed", this.GetType(), true);
