@@ -13,7 +13,8 @@ namespace Viper.PluginCalcLngWheelSlip
     [PluginDescrition("Calculates Wheel Slip by the relationship between Tyre RPS and Car Speed. Perfect for analyzing your Throttle and Brake input and TC/ABS settings\nWorks for pCARS 1 and 2, AMS2, R3E, AC, ACC, rF2 and F1 2018")]
     [PluginAuthor("Viper")]
     
-    public class DataPlugin : IPlugin, IDataPlugin, IWPFSettings
+    //the class name is used as the property headline name in SimHub "Available Properties"
+    public class ViperDataPlugin : IPlugin, IDataPlugin, IWPFSettings
     {
         private bool TyreDiameterCalculated = false;
         private bool manualOverride = false;
@@ -128,27 +129,67 @@ namespace Viper.PluginCalcLngWheelSlip
                     // F1 2018 needs no tyre diameter calculation, because the Tyre RPS values provide the tyre surface speed already. In this case it is also not possible to calculate the tyre diameter.
                     if (curGame != "F12018")
                     {
-                        // calculate Tyre Diameter automatic (Speed > 20 km/h, Brake and Throttle = 0) or on manual Override 
-                        // The if statement is for finding a moment when the wheel slip is nearly 0, because only then the car speed = tyre surface speed and the only then the tyre diameter calculation is correct
-                        if ((data.NewData.SpeedKmh > AccData.Speed && data.NewData.Brake <= AccData.Brake && data.NewData.Throttle <= AccData.Throttle && (VelocityX / Speedms) < AccData.Vel && TyreDiameterCalculated == false) || manualOverride == true)
+                        // calculate Tyre Diameter automatic or on manual Override
+                        if (TyreDiameterCalculated == false || manualOverride == true)
                         {
-                            //calculate tyre diameters
-                            for (int i = 0; i < TyreRPS.Length; i++)
+                            // Check if Speed is in the limit
+                            if(data.NewData.SpeedKmh > AccData.Speed)
                             {
-                                if (TyreRPS[i] != 0)
-                                {
-                                    TyreDiameter[i] = Speedms / TyreRPS[i] * 2;
-                                }
+                                pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterDetLimitOK.Speed", this.GetType(), true);
                             }
-                            pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_FL", this.GetType(), TyreDiameter[0]);
-                            pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_FR", this.GetType(), TyreDiameter[1]);
-                            pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RL", this.GetType(), TyreDiameter[2]);
-                            pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RR", this.GetType(), TyreDiameter[3]);
+                            else
+                            {
+                                pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterDetLimitOK.Speed", this.GetType(), false);
+                            }
+                            // Check if Throttle is in the limit
+                            if (data.NewData.Throttle <= AccData.Throttle)
+                            {
+                                pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterDetLimitOK.Throttle", this.GetType(), true);
+                            }
+                            else
+                            {
+                                pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterDetLimitOK.Throttle", this.GetType(), false);
+                            }
+                            // Check if Brake is in the limit
+                            if (data.NewData.Brake <= AccData.Brake)
+                            {
+                                pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterDetLimitOK.Brake", this.GetType(), true);
+                            }
+                            else
+                            {
+                                pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterDetLimitOK.Brake", this.GetType(), false);
+                            }
+                            // Check if Lateral Velocity is in the limit
+                            if ((VelocityX / Speedms) < AccData.Vel)
+                            {
+                                pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterDetLimitOK.LateralVel", this.GetType(), true);
+                            }
+                            else
+                            {
+                                pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterDetLimitOK.LateralVel", this.GetType(), false);
+                            }
 
-                            CarModel = data.NewData.CarModel;
-                            TyreDiameterCalculated = true;
-                            manualOverride = false;
-                            pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterComputed", this.GetType(), true);
+                            // The if statement is for finding a moment when the wheel slip is nearly 0, because only then the car speed = tyre surface speed and the only then the tyre diameter calculation is correct
+                            if ((data.NewData.SpeedKmh > AccData.Speed && data.NewData.Brake <= AccData.Brake && data.NewData.Throttle <= AccData.Throttle && (VelocityX / Speedms) < AccData.Vel) || manualOverride == true)
+                            {
+                                //calculate tyre diameters
+                                for (int i = 0; i < TyreRPS.Length; i++)
+                                {
+                                    if (TyreRPS[i] != 0)
+                                    {
+                                        TyreDiameter[i] = Speedms / TyreRPS[i] * 2;
+                                    }
+                                }
+                                pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_FL", this.GetType(), TyreDiameter[0]);
+                                pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_FR", this.GetType(), TyreDiameter[1]);
+                                pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RL", this.GetType(), TyreDiameter[2]);
+                                pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RR", this.GetType(), TyreDiameter[3]);
+
+                                CarModel = data.NewData.CarModel;
+                                TyreDiameterCalculated = true;
+                                manualOverride = false;
+                                pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterComputed", this.GetType(), true);
+                            }
                         }
                     }
 
@@ -275,7 +316,7 @@ namespace Viper.PluginCalcLngWheelSlip
             // if there is no settings file, use the following defaults
             catch
             {
-                AccData.Speed = 20;
+                AccData.Speed = 50;
                 AccData.Brake = 0;
                 AccData.Throttle = 5;
                 AccData.Vel = 0.001;
@@ -292,6 +333,11 @@ namespace Viper.PluginCalcLngWheelSlip
             pluginManager.AddProperty("CalcLngWheelSlip.Computed.TyreDiameter_FR", this.GetType(), "-");
             pluginManager.AddProperty("CalcLngWheelSlip.Computed.TyreDiameter_RL", this.GetType(), "-");
             pluginManager.AddProperty("CalcLngWheelSlip.Computed.TyreDiameter_RR", this.GetType(), "-");
+
+            pluginManager.AddProperty("CalcLngWheelSlip.TyreDiameterDetLimitOK.Speed", this.GetType(), false);
+            pluginManager.AddProperty("CalcLngWheelSlip.TyreDiameterDetLimitOK.Throttle", this.GetType(), false);
+            pluginManager.AddProperty("CalcLngWheelSlip.TyreDiameterDetLimitOK.Brake", this.GetType(), false);
+            pluginManager.AddProperty("CalcLngWheelSlip.TyreDiameterDetLimitOK.LateralVel", this.GetType(), false);
 
             pluginManager.AddProperty("CalcLngWheelSlip.TyreDiameterComputed", this.GetType(), false);
 
