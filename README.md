@@ -74,3 +74,10 @@ Screenshots\
 <img src="docs/Dash_Main_Spin.jpg" width="70%" height="70%">
 
 <img src="docs/Dash_Debug_Lock.jpg" width="70%" height="70%">
+
+## Overlay
+Further I added a small Overlay to the release which shows the four wheels with its slip values.\
+Simple double click on the file "Viper - Lng Wheel Slip.simhubdash" and SimHub will ask for the import process.\
+Here you can see how it works, first the tyre diameter detection phase where it shows if you are within the four limits and then how it operates if the detection phase is completed.
+
+<img src="docs/Overlay_Detection.gif"> <img src="docs/Overlay_Operating.gif">
