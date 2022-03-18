@@ -78,6 +78,6 @@ Screenshots\
 ## Overlay
 Further I added a small Overlay to the release which shows the four wheels with its slip values.\
 Simple double click on the file "Viper - Lng Wheel Slip.simhubdash" and SimHub will ask for the import process.\
-Here you can see how it works, first the tyre diameter detection phase where it shows if you are within the four limits and then how it operates if the detection phase is completed.
+Here you can see how it works, first the tyre diameter detection phase where it shows if you are within the four limits and then how it operates if the detection phase is completed (red = locking wheels, blue = spinning wheels).
 
 <img src="docs/Overlay_Detection.gif"> <img src="docs/Overlay_Operating.gif">
