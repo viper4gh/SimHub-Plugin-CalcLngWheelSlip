@@ -81,3 +81,6 @@ Simple double click on the file "Viper - Lng Wheel Slip.simhubdash" and SimHub w
 Here you can see how it works, first the tyre diameter detection phase where it shows if you are within the four limits and then how it operates if the detection phase is completed (red = locking wheels, blue = spinning wheels).
 
 <img src="docs/Overlay_Detection.gif"> <img src="docs/Overlay_Operating.gif">
+
+Demo Video (Mercedes-AMG GT3 @ Brands Hatch Indy)\
+[![](http://img.youtube.com/vi/iKmRmxuBwxY/0.jpg)](https://www.youtube.com/watch?v=iKmRmxuBwxY "Overlay")
