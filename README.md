@@ -30,7 +30,7 @@ For the wheel slip calculation we have to calculate the tyre surface speed and c
 And for the tyre surface speed calculation we need the tyre diameter, which is not available in the game API.\
 That means we have to calculate it first, but this works only if the wheel slip is nearly zero (no locking/spinning wheels, no cornering, no side slip).\
 To automatically detect such a moment I defined 4 limits:
-- minimum Car Speed - The higher the speed, the more accurate the result (default: 20 km/h)
+- minimum Car Speed - The higher the speed, the more accurate the result (default: 50 km/h)
 - maximum Brake input - prevent wheel locking (default: 0%)
 - maximum Throttle input - prevent wheel spinning (default: 5%)
 - maximum ratio value between lateral car speed (sideways) and car speed - prevent cornering and side slides (default: 0.001)
