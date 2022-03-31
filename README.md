@@ -41,7 +41,7 @@ The tighter the limits are set, the more accurate the result, but the longer it 
 
 ### How to use the plugin
 The plugin provides new properties and actions.\
-The new properties provide the calculated diameter(m) and the longitudinal slip value of every wheel.\
+The new properties provide the calculated diameter(m), the longitudinal slip value of every wheel and for the detection phase if you are within the limits.\
 The slip value can be understood as follows:
 -  0 = no slip, the tyre surface speed is the same as the car speed
 -  1.0 = 100% wheel lock, the tyre surface speed is 0 and the car still moving
