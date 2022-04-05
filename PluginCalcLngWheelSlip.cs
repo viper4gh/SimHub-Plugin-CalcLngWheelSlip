@@ -10,7 +10,7 @@ using SimHub;   // Needed for Logging
 namespace Viper.PluginCalcLngWheelSlip
 {
     [PluginName("Calculate Longitudinal Wheel Slip")]
-    [PluginDescrition("Calculates Wheel Slip by the relationship between Tyre RPS and Car Speed. Perfect for analyzing your Throttle and Brake input and TC/ABS settings\nWorks for pCARS 1 and 2, AMS2, R3E, AC, ACC, rF2 and F1 2018")]
+    [PluginDescrition("Calculates Wheel Slip by the relationship between Tyre RPS and Car Speed. Perfect for analyzing your Throttle and Brake input and TC/ABS settings\nWorks for pCARS 1 and 2, AMS2, R3E, AC, ACC, rF2 and F1 2018-2021")]
     [PluginAuthor("Viper")]
     
     //the class name is used as the property headline name in SimHub "Available Properties"
@@ -19,6 +19,7 @@ namespace Viper.PluginCalcLngWheelSlip
         private bool TyreDiameterCalculated = false;
         private bool manualOverride = false;
         private bool reset = false;
+        private bool F1x = false;   // for check if one of the F1 games is used
 
         //input variables
         private string curGame;
@@ -46,15 +47,25 @@ namespace Viper.PluginCalcLngWheelSlip
             //curGame = pluginManager.GetPropertyValue("DataCorePlugin.CurrentGame").ToString();
             curGame = data.GameName;
 
+            // check if one of the F1 games is in use
+            if (curGame == "F12018" || curGame == "F12019" || curGame == "F12020" || curGame == "F12021")
+            {
+                F1x = true;
+            }
+            else
+            {
+                F1x = false;
+            }
+
             if (data.GameRunning)
             {
-                if (data.OldData != null && data.NewData != null && (curGame == "PCars2" || curGame == "PCars" || curGame == "Automobilista2" || curGame == "RRRE" || curGame == "RFactor2" || curGame == "RFactor2Spectator" || curGame == "AssettoCorsa" || curGame == "AssettoCorsaCompetizione" || curGame == "F12018"/* || curGame == "???"  -add other games here*/))   //TODO: check a record where the game was captured from startup on
+                if (data.OldData != null && data.NewData != null && (curGame == "PCars2" || curGame == "PCars" || curGame == "Automobilista2" || curGame == "RRRE" || curGame == "RFactor2" || curGame == "RFactor2Spectator" || curGame == "AssettoCorsa" || curGame == "AssettoCorsaCompetizione" || F1x/* || curGame == "???"  -add other games here*/))   //TODO: check a record where the game was captured from startup on
                 {
                     // Determine Speed in m/s - cast from object to double and then to float
                     Speedms = (float)((double)pluginManager.GetPropertyValue("DataCorePlugin.GameData.NewData.SpeedKmh") / 3.6);
 
                     //////////////////////////////////////////// 
-                    //map raw game variables for PCars2 and RRRE
+                    //map raw game variables for games (not F1)
                     switch (curGame)
                     {
                         // TyreRPS array wheel order: FL, FR, RL, RR
@@ -91,19 +102,23 @@ namespace Viper.PluginCalcLngWheelSlip
                             TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.Physics.WheelAngularSpeed03"));
                             TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.Physics.WheelAngularSpeed04"));
                             break;
-                        case "F12018":
-                            VelocityX = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_localVelocityX"));
-                            // F1 2018 provides tyre surface speed directly - array wheel order from API is RL, RR, FL, FR
-                            TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed03"));
-                            TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed04"));
-                            TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed01"));
-                            TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed02"));
-                            break;
                         /*
                         case "???":
                             // add other game
                             break;
                         */
+                    }
+
+                    //map raw game variables for F1 games
+                    if (F1x)
+                    {
+                        //VelocityX is not needed for f1 games, because it is needed for the tyre diameter detection phase only, which is also not needed and not executed for F1 games
+                        //VelocityX = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_localVelocityX"));
+                        // F1 games provides tyre surface speed directly - array wheel order from API is RL, RR, FL, FR
+                        TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed03"));
+                        TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed04"));
+                        TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed01"));
+                        TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed02"));
                     }
                     // END mapping
                     //////////////////////////////////////////////
@@ -126,8 +141,8 @@ namespace Viper.PluginCalcLngWheelSlip
                         CarModel = "-";
                     }
 
-                    // F1 2018 needs no tyre diameter calculation, because the Tyre RPS values provide the tyre surface speed already. In this case it is also not possible to calculate the tyre diameter.
-                    if (curGame != "F12018")
+                    // F1 games need no tyre diameter calculation, because the Tyre RPS values provide the tyre surface speed already. In this case it is also not possible to calculate the tyre diameter.
+                    if (!F1x)
                     {
                         // calculate Tyre Diameter automatic or on manual Override
                         if (TyreDiameterCalculated == false || manualOverride == true)
@@ -194,7 +209,7 @@ namespace Viper.PluginCalcLngWheelSlip
                     }
 
                     // calculate Wheel Lock / Spin
-                    if (TyreDiameterCalculated == true || curGame == "F12018")
+                    if (TyreDiameterCalculated == true || F1x)
                     {
                         for (int i = 0; i < TyreDiameter.Length; i++)
                         {
@@ -223,13 +238,13 @@ namespace Viper.PluginCalcLngWheelSlip
                                     full wheel lock: (50 m/s - 0 m/s) / 50 m/s = 1
                                     wheel spins with double car speed: (50 m/s - 100 m/s) / 50 m/s = -1
                                 */
-                                if(curGame != "F12018")
+                                if(!F1x)
                                 {
                                     LngWheelSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / Speedms;
                                 }
                                 else
                                 {
-                                    // F1 2018 TyreRPS = Wheel Speed directly
+                                    // F1 games TyreRPS = Wheel Speed directly
                                     LngWheelSlip[i] = (Speedms - TyreRPS[i]) / Speedms;
                                 }
                                 
@@ -245,13 +260,13 @@ namespace Viper.PluginCalcLngWheelSlip
                             {
                                 // below 0.5 m/s show wheel slip directly, because division by speed generates to high values. Use divisor 10 to bring it better in the range between 0 and -1
                                 // 
-                                if (curGame != "F12018")
+                                if (!F1x)
                                 {
                                     LngWheelSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / 10;
                                 }
                                 else
                                 {
-                                    // F1 2018 TyreRPS = Wheel Speed directly
+                                    // F1 games TyreRPS = Wheel Speed directly
                                     LngWheelSlip[i] = (Speedms - TyreRPS[i]) / 10;
                                 }
 
