@@ -36,7 +36,7 @@ To automatically detect such a moment I defined 4 limits:
 - maximum ratio value between lateral car speed (sideways) and car speed - prevent cornering and side slides (default: 0.001)
 
 As soon as all 4 limits are met for the first time, the tyre diameter is calculated.\
-And only when the diameter is calculated, the slip can be calculated.\
+And only if the diameter is calculated, the slip can be calculated.\
 The tighter the limits are set, the more accurate the result, but the longer it takes that this moment happens.\
 The tyre diameters are saved as long as SimHub is running and you drive the same vehicle.
 If you change the vehicle or restart SimHub, the diameters are reset and the tire diameter detection phase starts again.
