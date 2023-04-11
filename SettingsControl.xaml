@@ -38,7 +38,7 @@
                 </Grid>
                 <TextBlock TextWrapping="Wrap" Text="Plugin Description" FontWeight="Bold" Margin="0,0,0,5"/>
                 <TextBlock TextWrapping="Wrap" Text="This plugin first calculates your car's tyre diameters by using the Tyre RPS and Car Speed. &#xA;These values are saved and then used to calculate the longitudinal Wheel Slips.&#xA;+1.0 = 100% Wheel Lock&#xA;   0 = no Wheel Slip&#xA;-1.0 = 100% Wheel Spin = The wheel rotates at least twice the speed of the corresponding vehicle speed.&#xA;All the new values are available as properties CalcLngWheelSlip.*&#xA;Further there are 2 new controller actions available for manual overriding the tyre diameter detection and to reset the automatic detection (named CalcLngWheelSlip.*)"/>
-                <TextBlock TextWrapping="Wrap" Text="Plugin Version 1.3.1" FontWeight="Bold" Margin="0,10,0,0"/>
+                <TextBlock TextWrapping="Wrap" Text="Plugin Version 1.3.2" FontWeight="Bold" Margin="0,10,0,0"/>
                 
 
             </StackPanel>

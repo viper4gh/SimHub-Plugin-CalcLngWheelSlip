@@ -48,7 +48,7 @@ namespace Viper.PluginCalcLngWheelSlip
             curGame = data.GameName;
 
             // check if one of the F1 games is in use
-            if (curGame == "F12018" || curGame == "F12019" || curGame == "F12020" || curGame == "F12021")
+            if (curGame == "F12018" || curGame == "F12019" || curGame == "F12020" || curGame == "F12021" || curGame == "F12022")
             {
                 F1x = true;
             }
