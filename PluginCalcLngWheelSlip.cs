@@ -4,6 +4,7 @@ using System;
 using System.Text;  //For File Encoding
 using System.Windows.Forms;
 using System.Windows.Controls;
+//using System.Linq; // Needed for Properties().OrderBy
 using Newtonsoft.Json.Linq; // Needed for JObject
 using System.IO;    // Need for read/write JSON settings file
 using SimHub;   // Needed for Logging
@@ -151,24 +152,63 @@ namespace Viper.PluginCalcLngWheelSlip
                             JArray JSONdiameters = (JArray)JSONcurGameData[data.NewData.CarModel];
                             if (JSONdiameters != null) //car diameters found
                             {
-                                //if the reset key was pressed, remove it from JSONcurGameData
+                                //if the reset key was pressed, remove the car from JSONcurGameData before adding the new data
                                 if (reset == true)
-                                {   //ToDo: remove car property from JSONcurGameData 
+                                {   //remove car property from JSONcurGameData 
                                     JSONcurGameData.Property(data.NewData.CarModel).Remove();
                                 }
                                 //if CarModel switched
                                 else
                                 {
-                                    pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_FL", this.GetType(), JSONdiameters[0]);
-                                    pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_FR", this.GetType(), JSONdiameters[1]);
-                                    pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RL", this.GetType(), JSONdiameters[2]);
-                                    pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RR", this.GetType(), JSONdiameters[3]);
-                                    TyreDiameter[0] = (float)JSONdiameters[0];
-                                    TyreDiameter[1] = (float)JSONdiameters[1];
-                                    TyreDiameter[2] = (float)JSONdiameters[2];
-                                    TyreDiameter[3] = (float)JSONdiameters[3];
-                                    TyreDiameterCalculated = true;
-                                    pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterComputed", this.GetType(), true);
+                                    //Validate tyre diameters from JSON file
+                                    bool data_ok = true;
+                                    //check array count
+                                    if (JSONdiameters.Count == 4)
+                                    {
+                                        for (int i = 0; i < JSONdiameters.Count; i++)
+                                        {
+                                            // check data type
+                                            if (JSONdiameters[i].Type == JTokenType.Float || JSONdiameters[i].Type == JTokenType.Integer)
+                                            {
+                                                // check value range
+                                                if ((float)JSONdiameters[i] < 0.00999 || (float)JSONdiameters[i] > 10)  //0.01 is not working, used 0.00999, so that 0.01 is valid
+                                                {
+                                                    data_ok = false;
+                                                    Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - Data file validation error. The value for a diameter is out of range (0.01-10): " + JSONdiameters[i]);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                data_ok = false;
+                                                Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - Data file validation error. The value for the diameter is not from type Float or Integer: " + JSONdiameters[i].Type);
+
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        data_ok = false;
+                                        Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - Data file validation error. The count of diameter values is wrong, expected 4, get " + JSONdiameters.Count + ".");
+                                    }
+
+                                    if (data_ok)
+                                    {
+                                        pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_FL", this.GetType(), JSONdiameters[0]);
+                                        pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_FR", this.GetType(), JSONdiameters[1]);
+                                        pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RL", this.GetType(), JSONdiameters[2]);
+                                        pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RR", this.GetType(), JSONdiameters[3]);
+                                        for (int i = 0; i < TyreDiameter.Length; i++)
+                                        {
+                                            //ToDo: check if value is available and valid in JSONdiameters
+                                            TyreDiameter[i] = (float)JSONdiameters[i];
+                                        }
+                                        /*TyreDiameter[0] = (float)JSONdiameters[0];
+                                        TyreDiameter[1] = (float)JSONdiameters[1];
+                                        TyreDiameter[2] = (float)JSONdiameters[2];
+                                        TyreDiameter[3] = (float)JSONdiameters[3];*/
+                                        TyreDiameterCalculated = true;
+                                        pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterComputed", this.GetType(), true);
+                                    }
                                     CarModel = data.NewData.CarModel;
                                 }
                             }
@@ -351,7 +391,7 @@ namespace Viper.PluginCalcLngWheelSlip
         public void End(PluginManager pluginManager)
         {
             string path_data = PluginManager.GetCommonStoragePath("Viper.PluginCalcLngWheelSlip.data.json");
-            //JObject JSONdata_diameters_file;
+ 
             // try to read complete data file from disk, compare file data with new data and write new file if there are diffs
             try
             {
@@ -360,29 +400,44 @@ namespace Viper.PluginCalcLngWheelSlip
                 JObject JSONcurGameData = (JObject)JSONdata_diameters[curGame];
                 if (!JToken.DeepEquals(JSONcurGameData_file, JSONcurGameData))
                 {
+                    //sort - disabled, not really needed
+                    /*JSONdata_diameters.Property(curGame).Remove();
+                    JObject sortedObj = new JObject(
+                        JSONcurGameData.Properties().OrderBy(p => p.Name)
+                    );
+                    JSONdata_diameters.Add(curGame, sortedObj);*/
+
                     File.WriteAllText(@path_data, JSONdata_diameters.ToString(), Encoding.UTF8);
                     Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - data file " + System.Environment.CurrentDirectory + "\\" + path_data + " saved.");
                 }
             }
-            // if there is no settings file on disk, create new one and write data for current game
-            catch
+            // if there is not already a settings file on disk, create new one and write data for current game
+            catch (FileNotFoundException)
             {
                 // try to write data file
                 try
                 {
+                    //sort - disabled, not really needed, to many checks necessary, e.g. on Remove if JSONdata_diameters is empty
+                    /*JSONdata_diameters.Property(curGame).Remove();
+                    JObject sortedObj = new JObject(
+                        JSONcurGameData.Properties().OrderBy(p => p.Name)
+                    );
+                    JSONdata_diameters.Add(curGame, sortedObj);*/
+
                     File.WriteAllText(@path_data, JSONdata_diameters.ToString(), Encoding.UTF8);
                     Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - data file " + System.Environment.CurrentDirectory + "\\" + path_data + " created and saved.");
                 }
-                // if there is no settings file,
-                catch
+                // data file cannot be written
+                catch (Exception ex)
                 {
-                    Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - cannot write data file.");
+                    Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - cannot write data file. The following error occured: " + ex.Message);
                 }
-
             }
-
-            
-            
+            // other errors like Syntax error on JSON parsing, data file will not be saved
+            catch (Exception ex)
+            {
+                Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - data file not saved. The following error occured: " + ex.Message);
+            }
         }
 
         /// <summary>
@@ -435,13 +490,13 @@ namespace Viper.PluginCalcLngWheelSlip
             try
             {
                 JSONdata_diameters = JObject.Parse(File.ReadAllText(@path_data));              
-                Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - data file " + System.Environment.CurrentDirectory + "\\" + path_data + " loaded.");
+                Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - Data file " + System.Environment.CurrentDirectory + "\\" + path_data + " loaded.");
             }
             // if there is no settings file, use the following defaults
-            catch
+            catch (Exception ex)
             {
                 JSONdata_diameters = new JObject();
-                Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - no data file loaded.");
+                Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - no Data file loaded- the following error occured: " + ex.Message);
             }
 
 
