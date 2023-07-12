@@ -199,7 +199,6 @@ namespace Viper.PluginCalcLngWheelSlip
                                         pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_RR", this.GetType(), JSONdiameters[3]);
                                         for (int i = 0; i < TyreDiameter.Length; i++)
                                         {
-                                            //ToDo: check if value is available and valid in JSONdiameters
                                             TyreDiameter[i] = (float)JSONdiameters[i];
                                         }
                                         /*TyreDiameter[0] = (float)JSONdiameters[0];
@@ -492,11 +491,11 @@ namespace Viper.PluginCalcLngWheelSlip
                 JSONdata_diameters = JObject.Parse(File.ReadAllText(@path_data));              
                 Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - Data file " + System.Environment.CurrentDirectory + "\\" + path_data + " loaded.");
             }
-            // if there is no settings file, use the following defaults
+            // if there is no data file, create new empty JObject
             catch (Exception ex)
             {
                 JSONdata_diameters = new JObject();
-                Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - no Data file loaded- the following error occured: " + ex.Message);
+                Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - no Data file loaded - the following error occured: " + ex.Message);
             }
 
 
