@@ -38,8 +38,10 @@ To automatically detect such a moment I defined 4 limits:
 As soon as all 4 limits are met for the first time, the tyre diameter is calculated.\
 And only if the diameter is calculated, the slip can be calculated.\
 The tighter the limits are set, the more accurate the result, but the longer it takes that this moment happens.\
-The tyre diameters are saved as long as SimHub is running and you drive the same vehicle.
-If you change the vehicle or restart SimHub, the diameters are reset and the tyre diameter detection phase starts again.
+~~The tyre diameters are saved as long as SimHub is running and you drive the same vehicle.
+If you change the vehicle or restart SimHub, the diameters are reset and the tyre diameter detection phase starts again.~~\
+Since version 1.3.3 detected tyre diameters are saved to the file Viper.PluginCalcLngWheelSlip.data.json, which will be automatically created in the folder "SimHub\PluginsData\Common\" (an example file with a lot of cars for AMS2 is included in the release files, thanks @newtonpg for that, simply copy the file to "SimHub\PluginsData\Common" if you want to use it).\
+The file is saved only on closing SimHub or switching to another game in SimHub, and is read on starting SimHub only, during runtime of SimHub the data is saved internally.
 
 ### How to use the plugin
 The plugin provides new properties and actions.\
