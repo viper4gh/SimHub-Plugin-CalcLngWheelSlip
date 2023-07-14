@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("Viper.PluginCalcRotTyreSlip")]
+[assembly: AssemblyTitle("Viper.PluginCalcLngWheelSlip")]
 [assembly: AssemblyDescription("Calculates Tyre Slip by Tyre Rotation")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Viper.PluginCalcRotTyreSlip")]
+[assembly: AssemblyProduct("Viper.PluginCalcLngWheelSlip")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
