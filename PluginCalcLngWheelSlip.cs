@@ -77,6 +77,9 @@ namespace Viper.PluginCalcLngWheelSlip
                         Speedms = (float)((double)pluginManager.GetPropertyValue("DataCorePlugin.GameData.NewData.SpeedKmh") / 3.6);
                     }
 
+                    // Use another value for car speed for all games, info from Wotever (SimHub dev)
+                    //Speedms = (float)(data.NewData.FeedbackData.GroundSpeed.GetValueOrDefault() /3.6);
+
                     //////////////////////////////////////////// 
                     //map raw game variables for games (not F1)
                     switch (curGame)
