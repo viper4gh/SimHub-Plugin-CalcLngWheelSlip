@@ -88,11 +88,29 @@ namespace Viper.PluginCalcLngWheelSlip
                         case "PCars2":
                         case "PCars":
                         case "Automobilista2":
-                            VelocityX = Math.Abs(((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mLocalVelocity01")));
-                            TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS01"));
-                            TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS02"));
-                            TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS03"));
-                            TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS04"));
+                            // Shared Memory Mode
+                            if(pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mLocalVelocity01") != null)
+                            {
+                                VelocityX = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mLocalVelocity01"));
+                                TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS01"));
+                                TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS02"));
+                                TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS03"));
+                                TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS04"));
+                            }
+                            // UDP Mode
+                            else
+                            {
+                                VelocityX = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.sTelemetryData.sLocalVelocity01"));
+                                TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.sTelemetryData.sTyreRPS01"));
+                                TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.sTelemetryData.sTyreRPS02"));
+                                TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.sTelemetryData.sTyreRPS03"));
+                                TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.sTelemetryData.sTyreRPS04"));
+                            }
+                            // alternative value for tyre RPS
+                            /*TyreRPS[0] = Math.Abs((float)data.NewData.FeedbackData.WheelRPS[0]);
+                            TyreRPS[1] = Math.Abs((float)data.NewData.FeedbackData.WheelRPS[1]);
+                            TyreRPS[2] = Math.Abs((float)data.NewData.FeedbackData.WheelRPS[2]);
+                            TyreRPS[3] = Math.Abs((float)data.NewData.FeedbackData.WheelRPS[3]);*/
                             break;
                         case "RRRE":
                             VelocityX = Math.Abs((float)(double)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.Player.LocalVelocity.X"));
