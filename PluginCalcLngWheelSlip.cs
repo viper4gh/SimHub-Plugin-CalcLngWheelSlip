@@ -12,7 +12,7 @@ using SimHub;   // Needed for Logging
 namespace Viper.PluginCalcLngWheelSlip
 {
     [PluginName("Calculate Longitudinal Wheel Slip")]
-    [PluginDescription("Calculates Wheel Slip by the relationship between Tyre RPS and Car Speed.\nPerfect for analyzing your Throttle/Brake input and TC/ABS/Diff settings.\nWorks for pCARS 1 and 2, AMS2, R3E, AC, ACC, rF2, LMU, F1 2018-2023, GT7, WRC23")]
+    [PluginDescription("Calculates Wheel Slip by the relationship between Tyre RPS and Car Speed.\nPerfect for analyzing your Throttle/Brake input and TC/ABS/Diff settings.\nWorks for pCARS 1 and 2, AMS2, R3E, AC, ACC, AC EVO, rF2, LMU, F1 2018-2023, GT7, WRC23")]
     [PluginAuthor("Viper")]
     
     //the class name is used as the property headline name in SimHub "Available Properties"
@@ -64,7 +64,7 @@ namespace Viper.PluginCalcLngWheelSlip
 
             if (data.GameRunning)
             {
-                if (data.OldData != null && data.NewData != null && (curGame == "PCars2" || curGame == "PCars" || curGame == "Automobilista2" || curGame == "RRRE" || curGame == "RFactor2" || curGame == "RFactor2Spectator" || curGame == "LMU" || curGame == "AssettoCorsa" || curGame == "AssettoCorsaCompetizione" || F1x || curGame == "GranTurismo7" || curGame == "EAWRC23"/* || curGame == "???"  -add other games here*/))   //TODO: check a record where the game was captured from startup on
+                if (data.OldData != null && data.NewData != null && (curGame == "PCars2" || curGame == "PCars" || curGame == "Automobilista2" || curGame == "RRRE" || curGame == "RFactor2" || curGame == "RFactor2Spectator" || curGame == "LMU" || curGame == "AssettoCorsa" || curGame == "AssettoCorsaCompetizione" || curGame == "AssettoCorsaEVO" || F1x || curGame == "GranTurismo7" || curGame == "EAWRC23"/* || curGame == "???"  -add other games here*/))   //TODO: check a record where the game was captured from startup on
                 {
                     // Determine Speed in m/s - cast from object to double and then to float
                     // For WRC23 SpeedKmh is calculated from vehicle_transmission_speed and shows not the real car speed, using vehicle_speed from raw data instead 
@@ -130,6 +130,7 @@ namespace Viper.PluginCalcLngWheelSlip
                             break;
                         case "AssettoCorsa":
                         case "AssettoCorsaCompetizione":
+                        case "AssettoCorsaEVO":
                             // local lateral Velocity is not available in AC/ACC. Used lateral G-force instead and divided it by 3 to bring it in the same range for the defined limit
                             VelocityX = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.Physics.AccG01") / 3);
                             TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.Physics.WheelAngularSpeed01"));
