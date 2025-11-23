@@ -14,7 +14,7 @@ namespace Viper.PluginCalcLngWheelSlip
     [PluginName("Calculate Longitudinal Wheel Slip")]
     [PluginDescription("Calculates Wheel Slip by the relationship between Tyre RPS and Car Speed.\nPerfect for analyzing your Throttle/Brake input and TC/ABS/Diff settings.\nWorks for pCARS 1 and 2, AMS2, R3E, AC, ACC, AC EVO, rF2, LMU, F1 2018-2023, GT7, WRC23")]
     [PluginAuthor("Viper")]
-    
+
     //the class name is used as the property headline name in SimHub "Available Properties"
     public class ViperDataPlugin : IPlugin, IDataPlugin, IWPFSettings
     {
@@ -41,7 +41,7 @@ namespace Viper.PluginCalcLngWheelSlip
         /// Instance of the current plugin manager
         /// </summary>
         public PluginManager PluginManager { get; set; }
-            
+
         /// <summary>
         /// called one time per game data update
         /// </summary>
@@ -64,10 +64,25 @@ namespace Viper.PluginCalcLngWheelSlip
 
             if (data.GameRunning)
             {
-                if (data.OldData != null && data.NewData != null && (curGame == "PCars2" || curGame == "PCars" || curGame == "Automobilista2" || curGame == "RRRE" || curGame == "RFactor2" || curGame == "RFactor2Spectator" || curGame == "LMU" || curGame == "AssettoCorsa" || curGame == "AssettoCorsaCompetizione" || curGame == "AssettoCorsaEVO" || F1x || curGame == "GranTurismo7" || curGame == "EAWRC23"/* || curGame == "???"  -add other games here*/))   //TODO: check a record where the game was captured from startup on
+                if (data.OldData != null &&
+                data.NewData != null &&
+                (curGame == "PCars2" ||
+                curGame == "PCars" ||
+                curGame == "Automobilista2" ||
+                curGame == "RRRE" ||
+                curGame == "RFactor2" ||
+                curGame == "RFactor2Spectator" ||
+                curGame == "LMU" ||
+                curGame == "AssettoCorsa" ||
+                curGame == "AssettoCorsaCompetizione" ||
+                curGame == "AssettoCorsaEVO" ||
+                curGame == "AssettoCorsaRally" ||
+                F1x ||
+                curGame == "GranTurismo7" ||
+                curGame == "EAWRC23"/* || curGame == "???"  -add other games here*/))   //TODO: check a record where the game was captured from startup on
                 {
                     // Determine Speed in m/s - cast from object to double and then to float
-                    // For WRC23 SpeedKmh is calculated from vehicle_transmission_speed and shows not the real car speed, using vehicle_speed from raw data instead 
+                    // For WRC23 SpeedKmh is calculated from vehicle_transmission_speed and shows not the real car speed, using vehicle_speed from raw data instead
                     if (curGame == "EAWRC23")
                     {
                         Speedms = (float)(pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.SessionUpdate.vehicle_speed"));
@@ -80,7 +95,7 @@ namespace Viper.PluginCalcLngWheelSlip
                     // Use another value for car speed for all games, info from Wotever (SimHub dev)
                     //Speedms = (float)(data.NewData.FeedbackData.GroundSpeed.GetValueOrDefault() /3.6);
 
-                    //////////////////////////////////////////// 
+                    ////////////////////////////////////////////
                     //map raw game variables for games (not F1)
                     switch (curGame)
                     {
@@ -89,7 +104,7 @@ namespace Viper.PluginCalcLngWheelSlip
                         case "PCars":
                         case "Automobilista2":
                             // Shared Memory Mode
-                            if(pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mLocalVelocity01") != null)
+                            if (pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mLocalVelocity01") != null)
                             {
                                 VelocityX = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mLocalVelocity01"));
                                 TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.mTyreRPS01"));
@@ -131,6 +146,7 @@ namespace Viper.PluginCalcLngWheelSlip
                         case "AssettoCorsa":
                         case "AssettoCorsaCompetizione":
                         case "AssettoCorsaEVO":
+                        case "AssettoCorsaRally":
                             // local lateral Velocity is not available in AC/ACC. Used lateral G-force instead and divided it by 3 to bring it in the same range for the defined limit
                             VelocityX = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.Physics.AccG01") / 3);
                             TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.Physics.WheelAngularSpeed01"));
@@ -159,7 +175,8 @@ namespace Viper.PluginCalcLngWheelSlip
                         //VelocityX = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_localVelocityX"));
                         // F1 games provides tyre surface speed directly - array wheel order from API is RL, RR, FL, FR
                         // in F1 2023 Property Names have changed
-                        if (curGame == "F12023") {
+                        if (curGame == "F12023")
+                        {
                             TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PacketMotionExData.m_wheelSpeed03"));
                             TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PacketMotionExData.m_wheelSpeed04"));
                             TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PacketMotionExData.m_wheelSpeed01"));
@@ -173,7 +190,8 @@ namespace Viper.PluginCalcLngWheelSlip
                             TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.SessionUpdate.vehicle_cp_forward_speed_br"));
                         }
                         // other F1 games
-                        else{
+                        else
+                        {
                             TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed03"));
                             TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed04"));
                             TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed01"));
@@ -188,7 +206,7 @@ namespace Viper.PluginCalcLngWheelSlip
                     if ((/*CarModel != "-" && */CarModel != data.NewData.CarModel) || reset == true)
                     {
                         TyreDiameterCalculated = false;
-                        
+
                         pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterComputed", this.GetType(), false);
                         pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_FL", this.GetType(), "-");
                         pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.TyreDiameter_FR", this.GetType(), "-");
@@ -209,7 +227,7 @@ namespace Viper.PluginCalcLngWheelSlip
                             {
                                 //if the reset key was pressed, remove the car from JSONcurGameData before adding the new data
                                 if (reset == true)
-                                {   //remove car property from JSONcurGameData 
+                                {   //remove car property from JSONcurGameData
                                     JSONcurGameData.Property(data.NewData.CarModel).Remove();
                                 }
                                 //if CarModel switched
@@ -281,7 +299,7 @@ namespace Viper.PluginCalcLngWheelSlip
                         if (TyreDiameterCalculated == false || manualOverride == true)
                         {
                             // Check if Speed is in the limit
-                            if(data.NewData.SpeedKmh > AccData.Speed)
+                            if (data.NewData.SpeedKmh > AccData.Speed)
                             {
                                 pluginManager.SetPropertyValue("CalcLngWheelSlip.TyreDiameterDetLimitOK.Speed", this.GetType(), true);
                             }
@@ -340,11 +358,11 @@ namespace Viper.PluginCalcLngWheelSlip
                                 if (JSONcurGameData == null)
                                 {
                                     JObject emptyJObj = new JObject();
-                                    JSONdata_diameters.Add(curGame,emptyJObj);
+                                    JSONdata_diameters.Add(curGame, emptyJObj);
                                     JSONcurGameData = (JObject)JSONdata_diameters[curGame];
                                 }
                                 string diameters = "[" + TyreDiameter[0].ToString() + "," + TyreDiameter[1].ToString() + "," + TyreDiameter[2].ToString() + "," + TyreDiameter[3].ToString() + "]";
-                                //check if the data for the car is already available and if yes, remove it first - can for example happen on manual override by pressing the key for CalcTyreDiameter 
+                                //check if the data for the car is already available and if yes, remove it first - can for example happen on manual override by pressing the key for CalcTyreDiameter
                                 if (JSONcurGameData[data.NewData.CarModel] != null)
                                 {
                                     JSONcurGameData.Property(data.NewData.CarModel).Remove();
@@ -392,7 +410,7 @@ namespace Viper.PluginCalcLngWheelSlip
                                     full wheel lock: (50 m/s - 0 m/s) / 50 m/s = 1
                                     wheel spins with double car speed: (50 m/s - 100 m/s) / 50 m/s = -1
                                 */
-                                if(!F1x && curGame != "EAWRC23")
+                                if (!F1x && curGame != "EAWRC23")
                                 {
                                     LngWheelSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / Speedms;
                                 }
@@ -401,19 +419,19 @@ namespace Viper.PluginCalcLngWheelSlip
                                     // F1 games TyreRPS = Wheel Speed directly
                                     LngWheelSlip[i] = (Speedms - TyreRPS[i]) / Speedms;
                                 }
-                                
+
                                 //don't show wheel lock below 1 m/s
                                 if (LngWheelSlip[i] > 0 && Speedms < 1)
                                 {
                                     LngWheelSlip[i] = 0;
                                 }
-                                
+
                                 if (LngWheelSlip[0] < -0.1) { }  // For Debugging only
                             }
                             else
                             {
                                 // below 0.5 m/s show wheel slip directly, because division by speed generates to high values. Use divisor 10 to bring it better in the range between 0 and -1
-                                // 
+                                //
                                 if (!F1x && curGame != "EAWRC23")
                                 {
                                     LngWheelSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / 10;
@@ -426,7 +444,7 @@ namespace Viper.PluginCalcLngWheelSlip
 
                                 if (Speedms > 0.4) { }  // For Debugging only
                             }
-                            
+
                         }
                         pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.LngWheelSlip_FL", this.GetType(), LngWheelSlip[0]);
                         pluginManager.SetPropertyValue("CalcLngWheelSlip.Computed.LngWheelSlip_FR", this.GetType(), LngWheelSlip[1]);
@@ -445,7 +463,7 @@ namespace Viper.PluginCalcLngWheelSlip
         public void End(PluginManager pluginManager)
         {
             string path_data = PluginManager.GetCommonStoragePath("Viper.PluginCalcLngWheelSlip.data.json");
- 
+
             // try to read complete data file from disk, compare file data with new data and write new file if there are diffs
             try
             {
@@ -496,7 +514,7 @@ namespace Viper.PluginCalcLngWheelSlip
 
         /// <summary>
         /// Return you winform settings control here, return null if no settings control
-        /// 
+        ///
         /// </summary>
         /// <param name="pluginManager"></param>
         /// <returns></returns>
@@ -543,7 +561,7 @@ namespace Viper.PluginCalcLngWheelSlip
             // try to read data file
             try
             {
-                JSONdata_diameters = JObject.Parse(File.ReadAllText(@path_data));              
+                JSONdata_diameters = JObject.Parse(File.ReadAllText(@path_data));
                 Logging.Current.Info("Plugin Viper.PluginCalcLngWheelSlip - Data file " + System.Environment.CurrentDirectory + "\\" + path_data + " loaded.");
             }
             // if there is no data file, create new empty JObject
@@ -575,7 +593,7 @@ namespace Viper.PluginCalcLngWheelSlip
             {
                 this.manualOverride = true;
             });
-            
+
             pluginManager.AddAction("CalcLngWheelSlip.ResetTyreDiameter", this.GetType(), (a, b) =>
             {
                 this.reset = true;
