@@ -8,7 +8,7 @@ The plugin is working for:
  - Project CARS 1 and 2
  - Automobilista 2
  - Race Room Racing Experience
- - Assetto Corsa, Assetto Corsa Competizione, Assetto Corsa EVO
+ - Assetto Corsa, Assetto Corsa Competizione, Assetto Corsa EVO, Assetto Corsa Rally
  - rFactor 2
  - F1 2018-2023 (but without tyre diameter calculation, because wheel speeds are directly available, Tyre RPS not)
  - Gran Turismo 7
