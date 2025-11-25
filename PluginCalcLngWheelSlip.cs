@@ -12,7 +12,7 @@ using SimHub;   // Needed for Logging
 namespace Viper.PluginCalcLngWheelSlip
 {
     [PluginName("Calculate Longitudinal Wheel Slip")]
-    [PluginDescription("Calculates Wheel Slip by the relationship between Tyre RPS and Car Speed.\nPerfect for analyzing your Throttle/Brake input and TC/ABS/Diff settings.\nWorks for pCARS 1 and 2, AMS2, R3E, AC, ACC, AC EVO, AC Rally, rF2, LMU, F1 2018-2023, GT7, WRC23")]
+    [PluginDescription("Calculates Wheel Slip by the relationship between Tyre RPS and Car Speed.\nPerfect for analyzing your Throttle/Brake input and TC/ABS/Diff settings.\nWorks for pCARS 1 and 2, AMS2, PMR, R3E, AC, ACC, AC EVO, AC Rally, rF2, LMU, F1 2018-2023, GT7, WRC23")]
     [PluginAuthor("Viper")]
     
     //the class name is used as the property headline name in SimHub "Available Properties"
@@ -73,7 +73,8 @@ namespace Viper.PluginCalcLngWheelSlip
                 if (data.OldData != null && data.NewData != null && (
                     curGame == "PCars2" || 
                     curGame == "PCars" || 
-                    curGame == "Automobilista2" || 
+                    curGame == "Automobilista2" ||
+                    curGame == "ProjectMotorRacing" ||
                     curGame == "RRRE" || 
                     curGame == "RFactor2" || 
                     curGame == "RFactor2Spectator" || 
@@ -175,7 +176,7 @@ namespace Viper.PluginCalcLngWheelSlip
                     }
 
                     //map raw game variables for F1 games and WRC23
-                    if (F1x || curGame == "EAWRC23")
+                    if (F1x || curGame == "EAWRC23" || curGame == "ProjectMotorRacing")
                     {
                         //VelocityX is not needed for f1 games, because it is needed for the tyre diameter detection phase only, which is also not needed and not executed for F1 games
                         //VelocityX = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_localVelocityX"));
@@ -194,8 +195,16 @@ namespace Viper.PluginCalcLngWheelSlip
                             TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.SessionUpdate.vehicle_cp_forward_speed_bl"));
                             TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.SessionUpdate.vehicle_cp_forward_speed_br"));
                         }
+                        else if (curGame == "ProjectMotorRacing")
+                        {
+                            TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerTelemetry.m_wheels01.m_linearSpeed"));
+                            TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerTelemetry.m_wheels02.m_linearSpeed"));
+                            TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerTelemetry.m_wheels03.m_linearSpeed"));
+                            TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerTelemetry.m_wheels04.m_linearSpeed"));
+                        }
                         // other F1 games
-                        else{
+                        else
+                        {
                             TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed03"));
                             TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed04"));
                             TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed01"));
@@ -296,8 +305,8 @@ namespace Viper.PluginCalcLngWheelSlip
                         reset = false;
                     }
 
-                    // F1 games an WRC23 need no tyre diameter calculation, because the Tyre RPS values provide the tyre surface speed already. In this case it is also not possible to calculate the tyre diameter.
-                    if (!F1x && curGame != "EAWRC23")
+                    // F1 games, WRC23, PMR need no tyre diameter calculation, because the Tyre RPS values provide the tyre surface speed already. In this case it is also not possible to calculate the tyre diameter.
+                    if (!F1x && curGame != "EAWRC23" && curGame != "ProjectMotorRacing")
                     {
                         // calculate Tyre Diameter automatic or on manual Override
                         if (TyreDiameterCalculated == false || manualOverride == true)
@@ -385,7 +394,7 @@ namespace Viper.PluginCalcLngWheelSlip
                     }
 
                     // calculate Wheel Lock / Spin
-                    if (TyreDiameterCalculated == true || F1x || curGame == "EAWRC23")
+                    if (TyreDiameterCalculated == true || F1x || curGame == "EAWRC23" || curGame == "ProjectMotorRacing")
                     {
                         for (int i = 0; i < TyreDiameter.Length; i++)
                         {
@@ -414,13 +423,13 @@ namespace Viper.PluginCalcLngWheelSlip
                                     full wheel lock: (50 m/s - 0 m/s) / 50 m/s = 1
                                     wheel spins with double car speed: (50 m/s - 100 m/s) / 50 m/s = -1
                                 */
-                                if(!F1x && curGame != "EAWRC23")
+                                if(!F1x && curGame != "EAWRC23" && curGame != "ProjectMotorRacing")
                                 {
                                     LngWheelSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / Speedms;
                                 }
                                 else
                                 {
-                                    // F1 games TyreRPS = Wheel Speed directly
+                                    // F1, WRC, PMR games TyreRPS = Wheel Speed directly
                                     LngWheelSlip[i] = (Speedms - TyreRPS[i]) / Speedms;
                                 }
                                 
@@ -436,13 +445,13 @@ namespace Viper.PluginCalcLngWheelSlip
                             {
                                 // below 0.5 m/s show wheel slip directly, because division by speed generates to high values. Use divisor 10 to bring it better in the range between 0 and -1
                                 // 
-                                if (!F1x && curGame != "EAWRC23")
+                                if (!F1x && curGame != "EAWRC23" && curGame != "ProjectMotorRacing")
                                 {
                                     LngWheelSlip[i] = (Speedms - TyreDiameter[i] * TyreRPS[i] / 2) / 10;
                                 }
                                 else
                                 {
-                                    // F1 games TyreRPS = Wheel Speed directly
+                                    // F1, WRC, PMR games TyreRPS = Wheel Speed directly
                                     LngWheelSlip[i] = (Speedms - TyreRPS[i]) / 10;
                                 }
 
