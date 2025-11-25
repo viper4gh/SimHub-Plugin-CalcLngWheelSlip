@@ -7,6 +7,7 @@ In some cases the game API brings a Wheel Slip value directly with, but the diff
 The plugin is working for:
  - Project CARS 1 and 2
  - Automobilista 2
+ - Project Motor Racing
  - Race Room Racing Experience
  - Assetto Corsa, Assetto Corsa Competizione, Assetto Corsa EVO, Assetto Corsa Rally
  - rFactor 2
