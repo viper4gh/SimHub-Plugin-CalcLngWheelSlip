@@ -7,13 +7,13 @@ In some cases the game API brings a Wheel Slip value directly with, but the diff
 The plugin is working for:
  - Project CARS 1 and 2
  - Automobilista 2
- - Project Motor Racing
+ - Project Motor Racing (without tyre diameter calculation, because wheel speeds are directly available)
  - Race Room Racing Experience
  - Assetto Corsa, Assetto Corsa Competizione, Assetto Corsa EVO, Assetto Corsa Rally
  - rFactor 2
- - F1 2018-2023 (but without tyre diameter calculation, because wheel speeds are directly available, Tyre RPS not)
+ - F1 2018-2023 (without tyre diameter calculation, because wheel speeds are directly available, Tyre RPS not)
  - Gran Turismo 7
- - WRC 2023 (but without tyre diameter calculation, because wheel speeds are directly available, Tyre RPS not)
+ - WRC 2023 (without tyre diameter calculation, because wheel speeds are directly available, Tyre RPS not)
 
 ### Installation
 Put the DLL file Viper.PluginCalcLngWheelSlip.dll into the SimHub folder parallel to the SimHubWPF.exe and start SimHub.\
@@ -21,11 +21,11 @@ SimHub detects the new plugin, confirm the question for enabling.\
 If SimHub does not start, please check the log files in the "Logs" folder.\
 If you go to Settings -> Plugins tab now you should see the new plugin.
 
-<img src="docs/Plugins_View.jpg" width="70%" height="70%">
+<img src="docs/Plugins_View.jpg" width="80%" height="80%">
 
 Further there is a settings screen under "Additional Plugins"-> "Calculate Longitudinal Wheel Slip" where you can configure the limits when a tyre diameter calculation is triggered.
 
-<img src="docs/Plugin_settings_view.jpg" width="70%" height="70%">
+<img src="docs/Plugin_settings_view.jpg" width="80%" height="80%">
 
 ### Why do we need a tyre diameter calculation and what about these limits?
 For the wheel slip calculation we have to calculate the tyre surface speed and compare it to the car speed.\
@@ -47,13 +47,13 @@ The file is saved only on closing SimHub or switching to another game in SimHub,
 
 ### How to use the plugin
 The plugin provides new properties and actions.\
-The new properties provide the calculated diameter(m), the longitudinal slip value of every wheel and for the detection phase if you are within the limits.\
+The new properties provide the calculated diameter(m), the longitudinal slip value of every wheel and for the detection phase if you are within the limits and if the detection phase is needed for the current game.\
 The slip value can be understood as follows:
 -  0 = no slip, the tyre surface speed is the same as the car speed
 -  1.0 = 100% wheel lock, the tyre surface speed is 0 and the car still moving
 - -1.0 = 100% wheel spin, the tyre surface speed is twice that of the car speed. The value can be lower than -1.0.
 
-<img src="docs/Properties.jpg" width="70%" height="70%">
+<img src="docs/Properties.jpg" width="80%" height="80%">
 
 There are further two new actions:
 - CalcTyreDiameter - manual trigger the tyre diameter calculation, the detection limits are ignored
