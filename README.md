@@ -11,7 +11,7 @@ The plugin is working for:
  - Race Room Racing Experience
  - Assetto Corsa, Assetto Corsa Competizione, Assetto Corsa EVO, Assetto Corsa Rally
  - rFactor 2
- - F1 2018-2023 (without tyre diameter calculation, because wheel speeds are directly available, Tyre RPS not)
+ - F1 2018-2025 (without tyre diameter calculation, because wheel speeds are directly available, Tyre RPS not)
  - Gran Turismo 7
  - WRC 2023 (without tyre diameter calculation, because wheel speeds are directly available, Tyre RPS not)
 
