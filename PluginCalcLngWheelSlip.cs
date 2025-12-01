@@ -12,7 +12,7 @@ using SimHub;   // Needed for Logging
 namespace Viper.PluginCalcLngWheelSlip
 {
     [PluginName("Calculate Longitudinal Wheel Slip")]
-    [PluginDescription("Calculates Wheel Slip by the relationship between Tyre RPS and Car Speed.\nPerfect for analyzing your Throttle/Brake input and TC/ABS/Diff settings.\nWorks for pCARS 1 and 2, AMS2, PMR, R3E, AC, ACC, AC EVO, AC Rally, rF2, LMU, F1 2018-2023, GT7, WRC23")]
+    [PluginDescription("Calculates Wheel Slip by the relationship between Tyre RPS and Car Speed.\nPerfect for analyzing your Throttle/Brake input and TC/ABS/Diff settings.\nWorks for pCARS 1 and 2, AMS2, PMR, R3E, AC, ACC, AC EVO, AC Rally, rF2, LMU, F1 2018-2025, GT7, WRC23")]
     [PluginAuthor("Viper")]
     
     //the class name is used as the property headline name in SimHub "Available Properties"
@@ -23,6 +23,7 @@ namespace Viper.PluginCalcLngWheelSlip
         private bool manualOverride = false;
         private bool reset = false;
         private bool F1_18_22 = false;   // for check if one of the F1 games 2018-2022 is used
+        private bool F1_23_x = false;   // for check if one of the F1 games 2023 - x is used
 
         //input variables
         private string curGame;
@@ -55,7 +56,7 @@ namespace Viper.PluginCalcLngWheelSlip
                 //curGame = pluginManager.GetPropertyValue("DataCorePlugin.CurrentGame").ToString();
                 curGame = data.GameName;
 
-                // check if F1 games 2018-2022 is in use, 2023 Property Names have changed
+                // check if F1 games 2018-2022 is in use, since 2023 Property Names have changed
                 if (curGame == "F12018" ||
                     curGame == "F12019" ||
                     curGame == "F12020" ||
@@ -68,6 +69,19 @@ namespace Viper.PluginCalcLngWheelSlip
                 else
                 {
                     F1_18_22 = false;
+                }
+
+                // check if F1 games 2023-x is in use
+                if (curGame == "F12023" ||
+                    curGame == "F12024" ||
+                    curGame == "F12025"
+                )
+                {
+                    F1_23_x = true;
+                }
+                else
+                {
+                    F1_23_x = false;
                 }
 
                 if (data.OldData != null && data.NewData != null && (
@@ -84,6 +98,7 @@ namespace Viper.PluginCalcLngWheelSlip
                     curGame == "AssettoCorsaEVO" ||
                     curGame == "AssettoCorsaRally" ||
                     F1_18_22 ||
+                    F1_23_x ||
                     curGame == "F12023" ||
                     curGame == "GranTurismo7" || 
                     curGame == "EAWRC23"/* || curGame == "???"  -add other games here*/
@@ -189,14 +204,6 @@ namespace Viper.PluginCalcLngWheelSlip
                             TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerTelemetry.m_wheels04.m_linearSpeed"));
                             TyreDiameterDetNeeded = false;
                             break;
-                        case "F12023":
-                            // in F1 2023 Property Names have changed in comparison to the versions before
-                            TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PacketMotionExData.m_wheelSpeed03"));
-                            TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PacketMotionExData.m_wheelSpeed04"));
-                            TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PacketMotionExData.m_wheelSpeed01"));
-                            TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PacketMotionExData.m_wheelSpeed02"));
-                            TyreDiameterDetNeeded = false;
-                            break;
                             /*
                             case "???":
                                 // add other game
@@ -204,15 +211,26 @@ namespace Viper.PluginCalcLngWheelSlip
                             */
                     }
 
+                    //VelocityX is not needed for F1 games, because it is needed for the tyre diameter detection phase only, which is also not needed and not executed for F1 games
+                    //F1 games provides tyre surface speed directly - array wheel order from API is RL, RR, FL, FR
                     //map raw game variables for F1 games 2018-2022
                     if (F1_18_22)
                     {
-                        //VelocityX is not needed for f1 games, because it is needed for the tyre diameter detection phase only, which is also not needed and not executed for F1 games
-                        // F1 games provides tyre surface speed directly - array wheel order from API is RL, RR, FL, FR
+                        
                         TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed03"));
                         TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed04"));
                         TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed01"));
                         TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerMotionData.m_wheelSpeed02"));
+                        TyreDiameterDetNeeded = false;
+                    }
+                    //map raw game variables for F1 games 2023-x
+                    if (F1_23_x)
+                    {
+                        // since F1 2023 Property Names have changed in comparison to the versions before
+                        TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PacketMotionExData.m_wheelSpeed03"));
+                        TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PacketMotionExData.m_wheelSpeed04"));
+                        TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PacketMotionExData.m_wheelSpeed01"));
+                        TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PacketMotionExData.m_wheelSpeed02"));
                         TyreDiameterDetNeeded = false;
                     }
                     // END mapping
