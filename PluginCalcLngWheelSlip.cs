@@ -12,7 +12,7 @@ using SimHub;   // Needed for Logging
 namespace Viper.PluginCalcLngWheelSlip
 {
     [PluginName("Calculate Longitudinal Wheel Slip")]
-    [PluginDescription("Calculates Wheel Slip by the relationship between Tyre RPS and Car Speed.\nPerfect for analyzing your Throttle/Brake input and TC/ABS/Diff settings.\nWorks for pCARS 1 and 2, AMS2, PMR, R3E, AC, ACC, AC EVO, AC Rally, rF2, LMU, F1 2018-2025, GT7, WRC23")]
+    [PluginDescription("Calculates Wheel Slip by the relationship between Tyre RPS and Car Speed.\nPerfect for analyzing your Throttle/Brake input and TC/ABS/Diff settings.\nWorks for pCARS 1 and 2, AMS2, PMR, R3E, AC, ACC, AC EVO, AC Rally, rF2, \nLMU, F1 2018-2025, GT7, WRC23, Dirt Rally 2.0")]
     [PluginAuthor("Viper")]
     
     //the class name is used as the property headline name in SimHub "Available Properties"
@@ -101,7 +101,8 @@ namespace Viper.PluginCalcLngWheelSlip
                     F1_23_x ||
                     curGame == "F12023" ||
                     curGame == "GranTurismo7" || 
-                    curGame == "EAWRC23"/* || curGame == "???"  -add other games here*/
+                    curGame == "EAWRC23" ||
+                    curGame == "CodemastersDirtRally2"/* || curGame == "???"  -add other games here*/
                 ))   //TODO: check a record where the game was captured from startup on
                 {
                     // Determine Speed in m/s - cast from object to double and then to float
@@ -202,6 +203,13 @@ namespace Viper.PluginCalcLngWheelSlip
                             TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerTelemetry.m_wheels02.m_linearSpeed"));
                             TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerTelemetry.m_wheels03.m_linearSpeed"));
                             TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.PlayerTelemetry.m_wheels04.m_linearSpeed"));
+                            TyreDiameterDetNeeded = false;
+                            break;
+                        case "CodemastersDirtRally2":
+                            TyreRPS[0] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.WheelSpeedFrontLeft"));
+                            TyreRPS[1] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.WheelSpeedFrontRight"));
+                            TyreRPS[2] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.WheelSpeedRearLeft"));
+                            TyreRPS[3] = Math.Abs((float)pluginManager.GetPropertyValue("DataCorePlugin.GameRawData.WheelSpeedRearRight"));
                             TyreDiameterDetNeeded = false;
                             break;
                             /*
