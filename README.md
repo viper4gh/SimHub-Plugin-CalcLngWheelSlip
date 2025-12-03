@@ -14,6 +14,7 @@ The plugin is working for:
  - F1 2018-2025 (without tyre diameter calculation, because wheel speeds are directly available, Tyre RPS not)
  - Gran Turismo 7
  - WRC 2023 (without tyre diameter calculation, because wheel speeds are directly available, Tyre RPS not)
+ - Dirt Rally 2.0 (without tyre diameter calculation, because wheel speeds are directly available)
 
 ### Installation
 Put the DLL file Viper.PluginCalcLngWheelSlip.dll into the SimHub folder parallel to the SimHubWPF.exe and start SimHub.\
